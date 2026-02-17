@@ -17,20 +17,20 @@ FastAPI-based REST API for generating Multiple Choice Questions from PDF documen
 
 ```
 backend/
-├── app.py                    # Main FastAPI application
-├── requirements.txt          # Python dependencies
-├── .env.example              # Environment template
-├── .gitignore
-└── src/
-    ├── pdf/
-    │   ├── __init__.py
-    │   └── extractor.py      # PDF processing logic
-    ├── llm/
-    │   ├── __init__.py
-    │   └── mcq_generator.py  # MCQ generation logic
-    └── utils/
-        ├── __init__.py
-        └── blob_storage.py   # Vercel Blob integration
+ app.py                    # Main FastAPI application
+ requirements.txt          # Python dependencies
+ .env.example              # Environment template
+ .gitignore
+ src/
+     pdf/
+        __init__.py
+        extractor.py      # PDF processing logic
+     llm/
+        __init__.py
+        mcq_generator.py  # MCQ generation logic
+     utils/
+         __init__.py
+         blob_storage.py   # Vercel Blob integration
 ```
 
 ## Core Modules

@@ -378,8 +378,11 @@ Content-Type: application/json
 
 ## 📚 Documentation
 
+- **[Quick Start](QUICKSTART.md)** - Get up and running in 3 steps
 - **[API Documentation](docs/API.md)** - Complete API reference and examples
 - **[Environment Configuration](docs/ENV_CONFIGURATION.md)** - Setup credentials and environment variables
+- **[Vercel Deployment](docs/VERCEL_DEPLOYMENT.md)** - Deploy to Vercel with serverless backend
+- **[Frontend API Configuration](docs/FRONTEND_API_CONFIG.md)** - Configure frontend for local and production APIs
 - **[Setup & Deployment](docs/SETUP.md)** - Installation, configuration, and deployment guides
 - **[Vercel Blob Setup](docs/VERCEL_BLOB_SETUP.md)** - Cloud storage integration guide
 - **[Backend Guide](docs/BACKEND_GUIDE.md)** - Backend architecture and development

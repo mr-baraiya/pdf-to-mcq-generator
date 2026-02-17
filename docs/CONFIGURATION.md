@@ -4,7 +4,7 @@ This guide explains how to configure and customize the PDF to MCQ Generator for 
 
 ---
 
-## 🔧 Environment Configuration
+##  Environment Configuration
 
 ### Backend Configuration (.env)
 
@@ -29,11 +29,11 @@ You can use any Ollama model. Popular options:
 
 | Model | Size | Speed | Quality | Command |
 |-------|------|-------|---------|---------|
-| **mistral** | 7B | ⚡ Fast | Very Good | `ollama pull mistral` |
-| **llama2** | 7B | ⚡ Fast | Good | `ollama pull llama2` |
-| **neural-chat** | 7B | ⚡⚡ Very Fast | Good | `ollama pull neural-chat` |
-| **dolphin-mixtral** | 46B | 🐢 Slow | Excellent | `ollama pull dolphin-mixtral` |
-| **llama2-uncensored** | 7B | ⚡ Fast | Good | `ollama pull llama2-uncensored` |
+| **mistral** | 7B |  Fast | Very Good | `ollama pull mistral` |
+| **llama2** | 7B |  Fast | Good | `ollama pull llama2` |
+| **neural-chat** | 7B |  Very Fast | Good | `ollama pull neural-chat` |
+| **dolphin-mixtral** | 46B |  Slow | Excellent | `ollama pull dolphin-mixtral` |
+| **llama2-uncensored** | 7B |  Fast | Good | `ollama pull llama2-uncensored` |
 
 Change model in `backend/src/llm/mcq_generator.py`:
 
@@ -47,7 +47,7 @@ def generate_mcqs(text: str, num_questions: int = 5, model: str = "mistral"):
 
 ---
 
-## 🎨 Frontend Customization
+##  Frontend Customization
 
 ### Color Scheme
 
@@ -114,7 +114,7 @@ Each component has its own CSS file:
 
 ---
 
-## 📝 MCQ Generation Customization
+##  MCQ Generation Customization
 
 ### Modify the Prompt
 
@@ -174,7 +174,7 @@ Modify both the prompt and response parsing in `mcq_generator.py`:
 
 ---
 
-## 🔌 API Customization
+##  API Customization
 
 ### Add New Endpoint
 
@@ -212,7 +212,7 @@ allow_origins=[
 
 ---
 
-## 📱 Frontend Features Customization
+##  Frontend Features Customization
 
 ### Customize Question Count Options
 
@@ -258,7 +258,7 @@ useEffect(() => {
 
 ---
 
-## 🔒 Security Customization
+##  Security Customization
 
 ### API Key Authentication
 
@@ -301,7 +301,7 @@ async def generate_mcqs_endpoint(request: Request, ...):
 
 ---
 
-## 🚀 Performance Customization
+##  Performance Customization
 
 ### Increase Model Context
 
@@ -349,7 +349,7 @@ async def generate_mcqs_endpoint(request: MCQRequest, db: Session = Depends(get_
 
 ---
 
-## 🌐 Frontend Language Customization
+##  Frontend Language Customization
 
 ### Add i18n (Internationalization)
 
@@ -373,7 +373,7 @@ function App() {
 
 ---
 
-## 🎯 Theme Customization
+##  Theme Customization
 
 ### Light/Dark Mode
 
@@ -403,7 +403,7 @@ useEffect(() => {
 return (
   <>
     <button onClick={() => setDarkMode(!darkMode)}>
-      {darkMode ? '☀️' : '🌙'}
+      {darkMode ? '' : ''}
     </button>
   </>
 );
@@ -411,7 +411,7 @@ return (
 
 ---
 
-## 📊 Logging and Monitoring
+##  Logging and Monitoring
 
 ### Add Logging
 
@@ -440,7 +440,7 @@ async def generate_mcqs_endpoint(request: MCQRequest):
 
 ---
 
-## 📦 Dependencies Customization
+##  Dependencies Customization
 
 ### Add New Dependencies
 
@@ -460,7 +460,7 @@ npm install --save-dev <dev-package>
 
 ---
 
-## ✅ Testing Customization
+##  Testing Customization
 
 ### Add Unit Tests
 
@@ -491,7 +491,7 @@ test('renders upload component', () => {
 
 ---
 
-## 🔄 Integration Customization
+##  Integration Customization
 
 ### Add Chat Interface
 
@@ -520,7 +520,7 @@ async def websocket_endpoint(websocket: WebSocket):
 
 ---
 
-## 📚 Need More Help?
+##  Need More Help?
 
 - Check individual guide files in `docs/`
 - Review component source code (well-commented)
@@ -531,4 +531,4 @@ async def websocket_endpoint(websocket: WebSocket):
 
 ---
 
-**Happy customizing! 🎨**
+**Happy customizing! **

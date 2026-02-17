@@ -16,22 +16,22 @@ This is a React application built with Vite that serves as the user interface fo
 
 ```
 frontend/
-├── index.html              # Entry HTML file
-├── package.json            # Dependencies and scripts
-├── vite.config.js         # Vite configuration
-├── .gitignore
-└── src/
-    ├── main.jsx           # React-DOM render entry
-    ├── App.jsx            # Main App component
-    ├── App.css            # App-level styles
-    ├── index.css          # Global styles
-    └── components/
-        ├── FileUpload.jsx     # PDF upload with drag-drop
-        ├── FileUpload.css
-        ├── MCQDisplay.jsx     # Question and answer display
-        ├── MCQDisplay.css
-        ├── Loading.jsx        # Loading spinner
-        └── Loading.css
+ index.html              # Entry HTML file
+ package.json            # Dependencies and scripts
+ vite.config.js         # Vite configuration
+ .gitignore
+ src/
+     main.jsx           # React-DOM render entry
+     App.jsx            # Main App component
+     App.css            # App-level styles
+     index.css          # Global styles
+     components/
+         FileUpload.jsx     # PDF upload with drag-drop
+         FileUpload.css
+         MCQDisplay.jsx     # Question and answer display
+         MCQDisplay.css
+         Loading.jsx        # Loading spinner
+         Loading.css
 ```
 
 ## Component Architecture
@@ -126,7 +126,7 @@ const API_URL = process.env.VITE_API_URL || 'http://localhost:8000';
 
 ```css
 /* Colors */
-Primary Gradient: #667eea → #764ba2
+Primary Gradient: #667eea  #764ba2
 White: #ffffff
 Dark Text: #333333
 Light Text: #666666
@@ -137,7 +137,7 @@ Warning: #fbbf24
 
 ### Responsive Design
 
-- Desktop: Full layout (≥1024px)
+- Desktop: Full layout (1024px)
 - Tablet: Adjusted spacing (768px-1023px)
 - Mobile: Stacked layout (<768px)
 
@@ -171,60 +171,60 @@ Outputs optimized bundle to `dist/` folder
 ## Component Lifecycle
 
 ```
-┌────────────────────────────────────┐
-│          App Component             │
-└────────────────┬───────────────────┘
-                 │
-        ┌────────▼──────────┐
-        │ No PDF uploaded?  │
-        └────────┬──────────┘
-                 │
-        ┌────────▼──────────┐
-        │  Show FileUpload  │
-        │    Component      │
-        └────────┬──────────┘
-                 │
+
+          App Component             
+
+                 
+        
+         No PDF uploaded?  
+        
+                 
+        
+          Show FileUpload  
+            Component      
+        
+                 
         User chooses file
-                 │
-        ┌────────▼──────────┐
-        │ Upload PDF to API │
-        │ (POST /upload-pdf)│
-        └────────┬──────────┘
-                 │
-        ┌────────▼──────────┐
-        │ PDF extracted OK? │
-        └────────┬──────────┘
-                 │
-        ┌────────▼──────────┐
-        │ Show Generate     │
-        │  MCQs Options     │
-        └────────┬──────────┘
-                 │
+                 
+        
+         Upload PDF to API 
+         (POST /upload-pdf)
+        
+                 
+        
+         PDF extracted OK? 
+        
+                 
+        
+         Show Generate     
+          MCQs Options     
+        
+                 
         User clicks "Generate N Questions"
-                 │
-        ┌────────▼──────────┐
-        │Generate MCQs from │
-        │API (POST /gen..)  │
-        └────────┬──────────┘
-                 │
-        ┌────────▼──────────┐
-        │ Show MCQDisplay   │
-        │   Component       │
-        └────────┬──────────┘
-                 │
+                 
+        
+        Generate MCQs from 
+        API (POST /gen..)  
+        
+                 
+        
+         Show MCQDisplay   
+           Component       
+        
+                 
         User answers questions
-                 │
-        ┌────────▼──────────┐
-        │ Show Results and  │
-        │    Score          │
-        └────────┬──────────┘
-                 │
+                 
+        
+         Show Results and  
+            Score          
+        
+                 
         User clicks "Generate New Questions"
-                 │
-        ┌────────▼──────────┐
-        │ Reset MCQ state   │
-        │ Go to step 4      │
-        └───────────────────┘
+                 
+        
+         Reset MCQ state   
+         Go to step 4      
+        
 ```
 
 ## Common Tasks

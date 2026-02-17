@@ -4,13 +4,13 @@ This guide explains how to properly configure credentials and environment variab
 
 ---
 
-## 📋 Overview
+##  Overview
 
 The application uses a `.env` file to store sensitive credentials and configuration. This keeps secrets out of your code and makes the app secure.
 
 ---
 
-## 🚀 Quick Setup
+##  Quick Setup
 
 ### Step 1: Create `.env` File
 
@@ -47,12 +47,12 @@ python app.py
 ```
 
 On startup, the app will validate your credentials and show:
-- ✓ Success message if configured correctly
-- ⚠ Warning if credentials are missing
+-  Success message if configured correctly
+-  Warning if credentials are missing
 
 ---
 
-## 📝 Detailed Configuration
+##  Detailed Configuration
 
 ### Ollama Configuration
 
@@ -102,7 +102,7 @@ VERCEL_BLOB_READ_WRITE_TOKEN=vercelblob_xxxxxxxxxxxxxxxxxxxxxxxx
 **How to get this:**
 1. Visit [vercel.com/storage/blob](https://vercel.com/storage/blob)
 2. Create a new Blob store
-3. Go to Settings → Tokens
+3. Go to Settings  Tokens
 4. Copy the "Read/Write Token"
 5. Paste into `.env` file
 
@@ -121,7 +121,7 @@ VERCEL_BLOB_STORE_ID=your_store_id_here
 
 ---
 
-## ✅ Validation & Verification
+##  Validation & Verification
 
 ### On Startup
 
@@ -131,7 +131,7 @@ The backend automatically validates credentials:
 $ python app.py
 
 INFO:     Starting PDF to MCQ Generator API...
-INFO:     ✓ Vercel Blob credentials configured
+INFO:      Vercel Blob credentials configured
 INFO:     Uvicorn running on http://0.0.0.0:8000
 ```
 
@@ -140,7 +140,7 @@ INFO:     Uvicorn running on http://0.0.0.0:8000
 ```bash
 $ python app.py
 
-WARNING: ⚠ Vercel Blob credentials not configured. 
+WARNING:  Vercel Blob credentials not configured. 
          PDF uploads will fail. Configure .env with:
   VERCEL_BLOB_READ_WRITE_TOKEN=vercelblob_...
   VERCEL_BLOB_STORE_ID=your_store_id
@@ -162,21 +162,21 @@ print(os.getenv("VERCEL_BLOB_STORE_ID"))  # Should print store ID
 
 ---
 
-## 🔒 Security Best Practices
+##  Security Best Practices
 
-### Do's ✅
-- ✅ Keep `.env` file in `.gitignore` (already configured)
-- ✅ Use strong, unique tokens
-- ✅ Rotate tokens periodically in Vercel dashboard
-- ✅ Never share `.env` file with others
-- ✅ Use `.env.example` as template only
+### Do's 
+-  Keep `.env` file in `.gitignore` (already configured)
+-  Use strong, unique tokens
+-  Rotate tokens periodically in Vercel dashboard
+-  Never share `.env` file with others
+-  Use `.env.example` as template only
 
-### Don'ts ❌
-- ❌ Commit `.env` to git repository
-- ❌ Share credentials via email or chat
-- ❌ Use same token everywhere
-- ❌ Hardcode credentials in code
-- ❌ Push `.env` to GitHub
+### Don'ts 
+-  Commit `.env` to git repository
+-  Share credentials via email or chat
+-  Use same token everywhere
+-  Hardcode credentials in code
+-  Push `.env` to GitHub
 
 ### .gitignore Configuration
 
@@ -198,7 +198,7 @@ git status
 
 ---
 
-## 🔧 Troubleshooting
+##  Troubleshooting
 
 ### Error: "VERCEL_BLOB_READ_WRITE_TOKEN not configured"
 
@@ -240,7 +240,7 @@ ENVIRONMENT=production python app.py
 
 ---
 
-## 🌍 Environment-Specific Configuration
+##  Environment-Specific Configuration
 
 ### Development (.env.development)
 
@@ -286,7 +286,7 @@ load_dotenv(env_file)
 
 ---
 
-## 📦 Managing Multiple Instances
+##  Managing Multiple Instances
 
 If running multiple instances:
 
@@ -313,11 +313,11 @@ ENVIRONMENT=multi python app.py
 
 ---
 
-## 🔄 Updating Credentials
+##  Updating Credentials
 
 ### Rotate Vercel Blob Token
 
-1. Go to Vercel Blob → Settings → Tokens
+1. Go to Vercel Blob  Settings  Tokens
 2. Create new "Read/Write Token"
 3. Update `backend/.env`:
    ```bash
@@ -340,7 +340,7 @@ cp backend/.env.backup backend/.env
 
 ---
 
-## 📊 Configuration Validation Script
+##  Configuration Validation Script
 
 Create `backend/validate_config.py`:
 
@@ -362,7 +362,7 @@ optional_vars = [
     "API_PORT",
 ]
 
-print("🔍 Checking Configuration...")
+print(" Checking Configuration...")
 print()
 
 errors = []
@@ -371,30 +371,30 @@ warnings = []
 for var in required_vars:
     value = os.getenv(var)
     if not value:
-        errors.append(f"✗ {var} is MISSING")
+        errors.append(f" {var} is MISSING")
     else:
-        print(f"✓ {var} is set")
+        print(f" {var} is set")
 
 for var in optional_vars:
     value = os.getenv(var)
     if not value:
-        warnings.append(f"⚠ {var} not set (using default)")
+        warnings.append(f" {var} not set (using default)")
     else:
-        print(f"✓ {var} is set")
+        print(f" {var} is set")
 
 print()
 if errors:
-    print("❌ ERRORS:")
+    print(" ERRORS:")
     for error in errors:
         print(f"  {error}")
     exit(1)
 
 if warnings:
-    print("⚠️ WARNINGS:")
+    print(" WARNINGS:")
     for warning in warnings:
         print(f"  {warning}")
 
-print("✅ Configuration is valid!")
+print(" Configuration is valid!")
 ```
 
 Run validation:
@@ -404,7 +404,7 @@ python validate_config.py
 
 ---
 
-## 🚀 Docker Configuration
+##  Docker Configuration
 
 For Docker deployments:
 
@@ -432,7 +432,7 @@ docker run --secret vercel_blob_token \
 
 ---
 
-## 📚 Related Documentation
+##  Related Documentation
 
 - [Vercel Blob Setup](../docs/VERCEL_BLOB_SETUP.md)
 - [Environment Variables in Python](https://12factor.net/config)
@@ -441,24 +441,24 @@ docker run --secret vercel_blob_token \
 
 ---
 
-## ✨ Summary
+##  Summary
 
 **Key Points:**
-1. ✅ Create `backend/.env` from `.env.example`
-2. ✅ Add your Vercel Blob credentials
-3. ✅ Run `python app.py` - credentials auto-loaded
-4. ✅ Check startup logs for validation
-5. ✅ Never commit `.env` to git
-6. ✅ Keep tokens safe and rotate periodically
+1.  Create `backend/.env` from `.env.example`
+2.  Add your Vercel Blob credentials
+3.  Run `python app.py` - credentials auto-loaded
+4.  Check startup logs for validation
+5.  Never commit `.env` to git
+6.  Keep tokens safe and rotate periodically
 
 **Quick Checklist:**
 - [ ] `.env` file created
 - [ ] Vercel credentials added
 - [ ] `.env.example` is up to date
 - [ ] `.env` is in `.gitignore`
-- [ ] Startup logs show "✓ Vercel Blob credentials configured"
+- [ ] Startup logs show " Vercel Blob credentials configured"
 - [ ] API responds at `http://localhost:8000/docs`
 
 ---
 
-**You're all set! Your credentials are now securely loaded from `.env`.** 🎉
+**You're all set! Your credentials are now securely loaded from `.env`.** 

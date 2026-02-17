@@ -4,7 +4,7 @@ This guide explains how to set up and use Vercel Blob storage with the PDF to MC
 
 ---
 
-## 📋 What is Vercel Blob?
+##  What is Vercel Blob?
 
 Vercel Blob is a serverless blob storage service that allows you to store files (like PDFs) in the cloud without managing infrastructure. It's ideal for:
 
@@ -16,7 +16,7 @@ Vercel Blob is a serverless blob storage service that allows you to store files 
 
 ---
 
-## 🚀 Setup Instructions
+##  Setup Instructions
 
 ### Step 1: Create Vercel Project
 
@@ -30,7 +30,7 @@ If you don't have one already:
 ### Step 2: Create Vercel Blob Store
 
 1. Go to your Vercel project dashboard
-2. Navigate to **Storage** → **Create Database** → **Blob**
+2. Navigate to **Storage**  **Create Database**  **Blob**
 3. Name your blob store (e.g., "pdf-store")
 4. Select a region closest to you
 
@@ -70,7 +70,7 @@ python app.py
 
 ---
 
-## 📊 API Changes
+##  API Changes
 
 ### Updated Upload Endpoint
 
@@ -96,54 +96,54 @@ file: <PDF binary>
 ```
 
 **Key Changes:**
-- ✅ PDFs are stored in Vercel Blob (not locally)
-- ✅ `blob_url` - Full URL to access the PDF
-- ✅ `blob_pathname` - Unique pathname for reference
-- ✅ No temporary files on disk
+-  PDFs are stored in Vercel Blob (not locally)
+-  `blob_url` - Full URL to access the PDF
+-  `blob_pathname` - Unique pathname for reference
+-  No temporary files on disk
 
 ---
 
-## 💾 Architecture
+##  Architecture
 
 ### Before (Local Storage):
 ```
-┌─────────────┐
-│   Browser   │
-└──────┬──────┘
-       │ Upload PDF
-       ▼
-┌──────────────────────────┐
-│  FastAPI Backend         │
-│  1. Save to disk         │
-│  2. Extract text         │
-│  3. Delete temp file     │
-└──────────────────────────┘
+
+   Browser   
+
+        Upload PDF
+       
+
+  FastAPI Backend         
+  1. Save to disk         
+  2. Extract text         
+  3. Delete temp file     
+
 ```
 
 ### After (Vercel Blob):
 ```
-┌─────────────┐
-│   Browser   │
-└──────┬──────┘
-       │ Upload PDF
-       ▼
-┌──────────────────────────┐      ┌────────────────────┐
-│  FastAPI Backend         │      │  Vercel Blob       │
-│  1. Upload to Blob       │─────▶│  Serverless Storage│
-│  2. Extract text         │      │                    │
-│  3. Return URL           │      │  pdf-pathname      │
-└──────────────────────────┘      └────────────────────┘
-       │
-       ▼
-┌──────────────────────────┐
-│  MCQ Generation          │
-│  Using Ollama            │
-└──────────────────────────┘
+
+   Browser   
+
+        Upload PDF
+       
+      
+  FastAPI Backend                 Vercel Blob       
+  1. Upload to Blob         Serverless Storage
+  2. Extract text                                   
+  3. Return URL                   pdf-pathname      
+      
+       
+       
+
+  MCQ Generation          
+  Using Ollama            
+
 ```
 
 ---
 
-## 🔧 Available Functions
+##  Available Functions
 
 ### Upload PDF to Blob
 ```python
@@ -178,7 +178,7 @@ await get_blob_info(blob_url: str)
 
 ---
 
-## 🎯 Usage Examples
+##  Usage Examples
 
 ### Example 1: Upload and Extract
 
@@ -225,7 +225,7 @@ text = extract_text_from_pdf(pdf_file)
 
 ---
 
-## 🌐 Frontend Updates (Optional)
+##  Frontend Updates (Optional)
 
 The frontend doesn't need changes to use Vercel Blob, but you can optionally:
 
@@ -257,7 +257,7 @@ const handleFileUpload = async (file) => {
 
 ---
 
-## 💵 Pricing & Limits
+##  Pricing & Limits
 
 ### Vercel Blob Pricing:
 - **Free Tier**: First 1GB/month, then $0.50/GB
@@ -271,7 +271,7 @@ const handleFileUpload = async (file) => {
 
 ---
 
-## 🔒 Security Best Practices
+##  Security Best Practices
 
 ### Token Management:
 1. **Never commit tokens to git** - Use `.env` file
@@ -288,7 +288,7 @@ const handleFileUpload = async (file) => {
 
 ---
 
-## 🚨 Troubleshooting
+##  Troubleshooting
 
 ### Error: "VERCEL_BLOB_READ_WRITE_TOKEN not configured"
 
@@ -342,11 +342,11 @@ curl http://localhost:11434/api/tags
 
 ---
 
-## 📈 Monitoring & Management
+##  Monitoring & Management
 
 ### View Uploaded Blobs
 
-1. Go to Vercel project → Storage → Blob
+1. Go to Vercel project  Storage  Blob
 2. See all uploaded files
 3. Check file size and upload date
 4. Delete files manually if needed
@@ -365,7 +365,7 @@ async def cleanup_pdf(blob_url: str):
 
 ---
 
-## 🔄 Integration with Database (Advanced)
+##  Integration with Database (Advanced)
 
 Add a database to store metadata:
 
@@ -400,7 +400,7 @@ async def upload_pdf(file: UploadFile, db: Session):
 
 ---
 
-## 📚 Additional Resources
+##  Additional Resources
 
 - [Vercel Blob Docs](https://vercel.com/docs/storage/vercel-blob)
 - [Vercel Blob API Reference](https://vercel.com/docs/storage/vercel-blob/api-reference)
@@ -409,7 +409,7 @@ async def upload_pdf(file: UploadFile, db: Session):
 
 ---
 
-## ✅ Verification
+##  Verification
 
 To verify Vercel Blob is working:
 
@@ -433,13 +433,13 @@ To verify Vercel Blob is working:
 
 4. **Verify in Vercel dashboard**
    ```
-   Go to Vercel project → Storage → Blob
+   Go to Vercel project  Storage  Blob
    Should see your uploaded PDF file
    ```
 
 ---
 
-## 🎉 You're All Set!
+##  You're All Set!
 
 Your backend now uses Vercel Blob for secure, scalable PDF storage. The frontend works exactly the same - no changes needed!
 
@@ -449,4 +449,4 @@ Your backend now uses Vercel Blob for secure, scalable PDF storage. The frontend
 3. Upload a PDF and verify it's stored in Vercel Blob
 4. Generate MCQs as usual
 
-Happy learning! 📚
+Happy learning! 

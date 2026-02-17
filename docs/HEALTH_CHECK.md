@@ -4,7 +4,7 @@ Run this checklist to ensure everything is properly set up.
 
 ---
 
-## ✅ Prerequisites Check
+##  Prerequisites Check
 
 - [ ] **Python** installed
   ```bash
@@ -36,7 +36,7 @@ Run this checklist to ensure everything is properly set up.
 
 ---
 
-## ✅ Backend Setup Check
+##  Backend Setup Check
 
 ```bash
 cd backend
@@ -83,7 +83,7 @@ cd backend
 
 ---
 
-## ✅ Frontend Setup Check
+##  Frontend Setup Check
 
 ```bash
 cd frontend
@@ -105,7 +105,7 @@ cd frontend
 - [ ] **Frontend** loads in browser
   ```
   Open: http://localhost:3000
-  Should see purple gradient background with title "📄 PDF to MCQ Generator"
+  Should see purple gradient background with title " PDF to MCQ Generator"
   ```
 
 - [ ] **Console has no errors**
@@ -117,7 +117,7 @@ cd frontend
 
 ---
 
-## ✅ Integration Check
+##  Integration Check
 
 With both servers running:
 
@@ -155,7 +155,7 @@ With both servers running:
 
 ---
 
-## 🔍 Detailed Diagnostics
+##  Detailed Diagnostics
 
 ### If Backend won't start:
 
@@ -229,7 +229,7 @@ With both servers running:
    ```
 
 4. **Check network tab**
-   - Open DevTools → Network tab
+   - Open DevTools  Network tab
    - Upload PDF and watch the request
    - Check response status and body
 
@@ -250,7 +250,7 @@ With both servers running:
 
 ---
 
-## 📊 Performance Check
+##  Performance Check
 
 ### Backend Performance:
 - [ ] Health check (GET /) should respond in <100ms
@@ -269,7 +269,7 @@ With both servers running:
 
 ---
 
-## 🧪 Test With Sample Data
+##  Test With Sample Data
 
 ### Sample PDF Content:
 
@@ -307,11 +307,11 @@ The system should generate questions like:
 
 ---
 
-## 🆘 Still Having Issues?
+##  Still Having Issues?
 
 1. **Check logs**:
    - Backend: Look at terminal running `python app.py`
-   - Frontend: Press F12 → Console tab in browser
+   - Frontend: Press F12  Console tab in browser
    - Ollama: Check Ollama application window
 
 2. **Restart services**:
@@ -346,21 +346,21 @@ The system should generate questions like:
 
 ---
 
-## ✨ Success Indicators
+##  Success Indicators
 
 You'll know everything is working when:
 
-1. ✅ Backend running: `http://localhost:8000` displays API info
-2. ✅ Frontend running: `http://localhost:3000` displays app UI
-3. ✅ You can upload a PDF and see extracted text
-4. ✅ You can generate MCQs and see questions appear
-5. ✅ You can answer questions and get score
-6. ✅ No errors in browser console
-7. ✅ No errors in backend terminal
+1.  Backend running: `http://localhost:8000` displays API info
+2.  Frontend running: `http://localhost:3000` displays app UI
+3.  You can upload a PDF and see extracted text
+4.  You can generate MCQs and see questions appear
+5.  You can answer questions and get score
+6.  No errors in browser console
+7.  No errors in backend terminal
 
 ---
 
-**If all checks pass, your system is ready! 🎉**
+**If all checks pass, your system is ready! **
 
 For specific issues, check the documentation:
 - [SETUP.md](SETUP.md) - Setup guide

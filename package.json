@@ -1,0 +1,15 @@
+{
+  "name": "pdf-to-mcq-generator",
+  "version": "1.0.0",
+  "description": "PDF to MCQ Generator - Full Stack Application",
+  "scripts": {
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "backend": "python -m uvicorn api.index:app --reload --host 0.0.0.0 --port 8000",
+    "frontend": "cd frontend && npm run dev",
+    "install-frontend": "cd frontend && npm install",
+    "build": "cd frontend && npm run build"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

@@ -91,43 +91,43 @@ FRONTEND_URL=http://localhost:3000
 
 ```
 pdf-to-mcq-generator/
-├── backend/
-│   ├── app.py                    # FastAPI application
-│   ├── requirements.txt          # Python dependencies
-│   ├── .env.example              # Environment variables template
-│   ├── .gitignore
-│   └── src/
-│       ├── pdf/
-│       │   ├── __init__.py
-│       │   └── extractor.py      # PDF text extraction
-│       ├── llm/
-│       │   ├── __init__.py
-│       │   └── mcq_generator.py  # MCQ generation logic
-│       └── utils/                # Utility functions
-│
-├── frontend/
-│   ├── index.html                # HTML entry point
-│   ├── package.json              # Node dependencies
-│   ├── vite.config.js            # Vite configuration
-│   ├── .gitignore
-│   └── src/
-│       ├── main.jsx              # React entry point
-│       ├── App.jsx               # Main App component
-│       ├── App.css               # App styles
-│       ├── index.css             # Global styles
-│       └── components/
-│           ├── FileUpload.jsx    # PDF upload component
-│           ├── FileUpload.css
-│           ├── MCQDisplay.jsx    # Questions display
-│           ├── MCQDisplay.css
-│           ├── Loading.jsx       # Loading spinner
-│           └── Loading.css
-│
-├── docs/
-│   ├── API.md                    # API documentation
-│   └── SETUP.md                  # This file
-│
-└── README.md
+ backend/
+    app.py                    # FastAPI application
+    requirements.txt          # Python dependencies
+    .env.example              # Environment variables template
+    .gitignore
+    src/
+        pdf/
+           __init__.py
+           extractor.py      # PDF text extraction
+        llm/
+           __init__.py
+           mcq_generator.py  # MCQ generation logic
+        utils/                # Utility functions
+
+ frontend/
+    index.html                # HTML entry point
+    package.json              # Node dependencies
+    vite.config.js            # Vite configuration
+    .gitignore
+    src/
+        main.jsx              # React entry point
+        App.jsx               # Main App component
+        App.css               # App styles
+        index.css             # Global styles
+        components/
+            FileUpload.jsx    # PDF upload component
+            FileUpload.css
+            MCQDisplay.jsx    # Questions display
+            MCQDisplay.css
+            Loading.jsx       # Loading spinner
+            Loading.css
+
+ docs/
+    API.md                    # API documentation
+    SETUP.md                  # This file
+
+ README.md
 ```
 
 ---
