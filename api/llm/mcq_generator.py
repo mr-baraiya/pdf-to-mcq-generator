@@ -1,16 +1,55 @@
-# Generate MCQ questions using Groq AI
+# Generate MCQ questions using Groq AI or Gemini AI (Smart Load Balancing)
 
 import os
 import json
 import re
 import logging
 from groq import Groq
+import google.generativeai as genai
 
 log = logging.getLogger(__name__)
 
+# Track last used API for round-robin
+_last_api_used = None
+
+
+def select_api(text_size_bytes):
+    """
+    Smart API selection based on size and round-robin
+    
+    Rules:
+    1. If text > 5MB → Always use Gemini
+    2. If text < 50KB → Always use Groq (faster)
+    3. If 50KB < text < 5MB → Round-robin between both
+    """
+    global _last_api_used
+    
+    size_mb = text_size_bytes / (1024 * 1024)
+    size_kb = text_size_bytes / 1024
+    
+    # Large files (>5MB) → Gemini only
+    if size_mb > 5:
+        log.info(f"Large text ({size_mb:.2f}MB) → Using Gemini (better understanding)")
+        return "gemini"
+    
+    # Small files (<50KB) → Groq only (faster)
+    if size_kb < 50:
+        log.info(f"Small text ({size_kb:.2f}KB) → Using Groq (faster)")
+        return "groq"
+    
+    # Medium files (50KB - 5MB) → Round-robin
+    if _last_api_used == "groq":
+        api = "gemini"
+    else:
+        api = "groq"
+    
+    _last_api_used = api
+    log.info(f"Medium text ({size_kb:.2f}KB) → Round-robin: {api.upper()}")
+    return api
+
 
 def generate_mcqs(txt, num=5):
-    """Generate MCQ from text using Groq API"""
+    """Generate MCQ from text using smart API selection"""
     
     # Validate
     if not txt or not txt.strip():
@@ -19,22 +58,30 @@ def generate_mcqs(txt, num=5):
     if num < 1 or num > 20:
         raise ValueError("Questions: 1-20")
     
-    # Get Groq API key
-    api_key = os.getenv("GROQ_API_KEY")
+    # Select API based on text size
+    text_size = len(txt.encode('utf-8'))
+    selected_api = select_api(text_size)
     
+    # Use selected API
+    if selected_api == "gemini":
+        return generate_with_gemini(txt, num)
+    else:
+        return generate_with_groq(txt, num)
+
+
+def generate_with_groq(txt, num):
+    """Generate MCQ using Groq API"""
+    
+    api_key = os.getenv("GROQ_API_KEY")
     if not api_key:
         raise ValueError("GROQ_API_KEY not found in .env file")
     
-    log.info(f"Generating {num} MCQs with Groq API")
+    log.info(f"🚀 Generating {num} MCQs with Groq (Llama 3.3)")
     
     try:
-        # Create Groq client
         client = Groq(api_key=api_key)
-        
-        # Make prompt
         prompt = make_prompt(txt, num)
     
-        # Send to Groq API
         res = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[
@@ -51,22 +98,54 @@ def generate_mcqs(txt, num=5):
             max_tokens=2000
         )
         
-        # Get response
         resp = res.choices[0].message.content
-        
-        # Parse JSON
         qs = parse_response(resp)
         
-        log.info(f"Generated {len(qs)} questions")
+        log.info(f"✅ Groq: Generated {len(qs)} questions")
         return qs
         
     except Exception as e:
-        log.error(f"Groq error: {str(e)}")
+        log.error(f"❌ Groq error: {str(e)}")
+        # Fallback to Gemini if Groq fails
+        log.info("Falling back to Gemini...")
+        return generate_with_gemini(txt, num)
+
+
+def generate_with_gemini(txt, num):
+    """Generate MCQ using Gemini API"""
+    
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        raise ValueError("GEMINI_API_KEY not found in .env file")
+    
+    log.info(f"🧠 Generating {num} MCQs with Gemini")
+    
+    try:
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel('gemini-pro')
+        
+        prompt = make_prompt(txt, num)
+        
+        response = model.generate_content(prompt)
+        resp = response.text
+        
+        qs = parse_response(resp)
+        
+        log.info(f"✅ Gemini: Generated {len(qs)} questions")
+        return qs
+        
+    except Exception as e:
+        log.error(f"❌ Gemini error: {str(e)}")
         raise
 
 
 def make_prompt(txt, num):
     """Create prompt for AI"""
+    
+    # Truncate text if too large (for API limits)
+    max_chars = 10000
+    if len(txt) > max_chars:
+        txt = txt[:max_chars] + "...(truncated)"
     
     return f"""From this text, make {num} multiple choice questions:
 

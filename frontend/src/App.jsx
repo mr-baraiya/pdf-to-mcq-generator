@@ -86,13 +86,19 @@ function App() {
     }, 100);
   };
 
+  const handleLogoClick = () => {
+    // Reset to landing page
+    handleReset();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen bg-gray-950 text-white relative overflow-x-hidden">
       {/* Animated Background */}
       <AnimatedBackground />
 
       {/* Navbar */}
-      <Navbar />
+      <Navbar onLogoClick={handleLogoClick} />
 
       {/* Main Content */}
       <div className="relative z-10">
