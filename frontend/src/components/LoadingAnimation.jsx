@@ -36,7 +36,7 @@ const LoadingStep = ({ icon: Icon, text, active, completed }) => {
   );
 };
 
-const Loading = ({ stage = 'uploading' }) => {
+const LoadingAnimation = ({ stage = 'uploading' }) => {
   const progressRef = useRef(null);
   const [currentStep, setCurrentStep] = useState(0);
   
@@ -61,7 +61,7 @@ const Loading = ({ stage = 'uploading' }) => {
         ease: 'power2.out'
       });
     }
-  }, [currentStep, steps.length]);
+  }, [currentStep]);
 
   return (
     <section className="py-20 px-4">
@@ -144,4 +144,4 @@ const Loading = ({ stage = 'uploading' }) => {
   );
 };
 
-export default Loading;
+export default LoadingAnimation;

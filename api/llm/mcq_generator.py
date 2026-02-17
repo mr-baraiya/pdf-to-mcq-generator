@@ -36,7 +36,7 @@ def generate_mcqs(txt, num=5):
     
         # Send to Groq API
         res = client.chat.completions.create(
-            model="mixtral-8x7b-32768",
+            model="llama-3.3-70b-versatile",
             messages=[
                 {
                     "role": "system",
@@ -98,8 +98,24 @@ def parse_response(resp):
     """Extract JSON from response"""
     
     try:
-        # Find JSON
-        m = re.search(r'\{{[\s\S]*\}}', resp)
+        # Remove markdown code blocks if present
+        resp = resp.strip()
+        resp = re.sub(r'^```json\s*', '', resp)
+        resp = re.sub(r'^```\s*', '', resp)
+        resp = re.sub(r'\s*```$', '', resp)
+        
+        # Try to parse directly first
+        try:
+            d = json.loads(resp)
+            qs = d.get("questions", [])
+            if qs:
+                log.info(f"Parsed {len(qs)} questions")
+                return qs
+        except json.JSONDecodeError:
+            pass
+        
+        # Find JSON with regex
+        m = re.search(r'\{[\s\S]*\}', resp)
         
         if m:
             j = m.group(0)
@@ -107,12 +123,15 @@ def parse_response(resp):
             qs = d.get("questions", [])
             
             if qs:
-                log.debug(f"Parsed {len(qs)} questions")
+                log.info(f"Parsed {len(qs)} questions")
                 return qs
         
-        log.warning("No JSON found")
+        log.warning(f"No JSON found in response: {resp[:200]}")
         return []
         
     except json.JSONDecodeError as e:
-        log.error(f"JSON error: {str(e)}")
+        log.error(f"JSON error: {str(e)}, Response: {resp[:200]}")
+        return []
+    except Exception as e:
+        log.error(f"Parse error: {str(e)}")
         return []

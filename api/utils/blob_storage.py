@@ -2,23 +2,22 @@
 
 import os
 import logging
-import aiohttp
+from vercel_blob import put, delete
+import asyncio
 
 log = logging.getLogger(__name__)
 
 
-def get_creds():
-    """Get Vercel Blob token and store ID from .env"""
-    tok = os.getenv("VERCEL_BLOB_READ_WRITE_TOKEN")
-    sid = os.getenv("VERCEL_BLOB_STORE_ID")
-    return tok, sid
+def get_token():
+    """Get Vercel Blob token from .env"""
+    return os.getenv("VERCEL_BLOB_READ_WRITE_TOKEN")
 
 
 def validate_blob_credentials():
     """Check if credentials are set"""
-    tok, sid = get_creds()
+    tok = get_token()
     
-    if tok and sid:
+    if tok:
         log.info("✓ Vercel Blob ready")
         return True
     else:
@@ -27,41 +26,41 @@ def validate_blob_credentials():
 
 
 async def upload_pdf_to_blob(content, fname):
-    """Upload PDF to cloud storage"""
+    """Upload PDF to cloud storage using official Vercel SDK"""
     
-    tok, sid = get_creds()
+    tok = get_token()
     
-    if not validate_blob_credentials():
-        log.error("Credentials missing")
+    if not tok:
+        log.error("Vercel Blob token missing")
         return None
     
     try:
-        url = "https://blob.vercel-storage.com"
-        hdrs = {
-            "authorization": f"Bearer {tok}",
-            "x-blob-store-id": sid,
-            "x-blob-filename": fname
-        }
-        
         log.info(f"Uploading: {fname}")
         
-        async with aiohttp.ClientSession() as s:
-            async with s.put(url, data=content, headers=hdrs) as r:
-                if r.status == 200:
-                    d = await r.json()
-                    log.info(f"Uploaded: {d.get('url')}")
-                    return d
-                else:
-                    log.error(f"Upload failed: {r.status}")
-                    return None
+        # Run synchronous put in executor to make it async
+        loop = asyncio.get_event_loop()
+        result = await loop.run_in_executor(
+            None,
+            lambda: put(
+                fname,
+                content,
+                options={"token": tok, "addRandomSuffix": "true"}
+            )
+        )
+        
+        log.info(f"Uploaded: {result.get('url')}")
+        return result
                     
     except Exception as e:
         log.error(f"Upload error: {str(e)}")
         return None
 
 
+
+
 async def download_pdf_from_blob(url):
     """Download PDF from cloud storage"""
+    import aiohttp
     
     try:
         log.info(f"Downloading: {url}")
@@ -82,31 +81,28 @@ async def download_pdf_from_blob(url):
 
 
 async def delete_pdf_from_blob(url):
-    """Delete PDF from cloud storage"""
+    """Delete PDF from cloud storage using official Vercel SDK"""
     
-    tok, sid = get_creds()
+    tok = get_token()
     
-    if not validate_blob_credentials():
-        log.error("Credentials missing")
+    if not tok:
+        log.error("Vercel Blob token missing")
         return False
     
     try:
         log.info(f"Deleting: {url}")
         
-        hdrs = {
-            "authorization": f"Bearer {tok}",
-            "x-blob-store-id": sid
-        }
+        # Run synchronous delete in executor to make it async
+        loop = asyncio.get_event_loop()
+        await loop.run_in_executor(
+            None,
+            lambda: delete([url], options={"token": tok})
+        )
         
-        async with aiohttp.ClientSession() as s:
-            async with s.delete(url, headers=hdrs) as r:
-                if r.status in [200, 204]:
-                    log.info("Deleted")
-                    return True
-                else:
-                    log.error(f"Delete failed: {r.status}")
-                    return False
+        log.info("Deleted")
+        return True
                     
     except Exception as e:
         log.error(f"Delete error: {str(e)}")
         return False
+
