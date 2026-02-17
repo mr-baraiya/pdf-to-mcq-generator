@@ -1,6 +1,6 @@
 # PDF to MCQ Generator
 
-An AI-powered web application that automatically generates Multiple Choice Questions (MCQs) from PDF documents using advanced AI models (Groq/Gemini).
+An AI-powered web application that automatically generates Multiple Choice Questions (MCQs) from PDF documents using advanced AI models (Ollama).
 
 **Live Features:**
 - Quiz Attempt Mode - Try quiz before seeing answers
