@@ -36,18 +36,17 @@ const Navbar = ({ onLogoClick }) => {
               </div>
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gradient">
+              <h1 className="text-xl sm:text-2xl font-bold text-gradient">
                 PDF2MCQ
               </h1>
-              <p className="text-xs text-gray-400 -mt-1">AI Powered</p>
             </div>
           </motion.button>
 
           {/* Navigation Links */}
-          <div className="flex items-center space-x-6">
+          <div className="flex items-center space-x-2 sm:space-x-6">
             <motion.a
               href="#features"
-              className="text-sm text-gray-300 hover:text-white transition-colors"
+              className="text-xs sm:text-sm text-gray-300 hover:text-white transition-colors hidden sm:block"
               whileHover={{ y: -2 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -55,7 +54,7 @@ const Navbar = ({ onLogoClick }) => {
             </motion.a>
             <motion.a
               href="mailto:baraiyavishalbhai32@gmail.com"
-              className="text-sm text-gray-300 hover:text-white transition-colors"
+              className="text-xs sm:text-sm text-gray-300 hover:text-white transition-colors hidden md:block"
               whileHover={{ y: -2 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -65,12 +64,12 @@ const Navbar = ({ onLogoClick }) => {
               href="https://github.com/mr-baraiya/pdf-to-mcq-generator"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-all group"
+              className="flex items-center space-x-2 px-3 sm:px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-all group"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Github className="w-5 h-5" />
-              <span className="text-sm hidden sm:inline">GitHub</span>
+              <Github className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="text-xs sm:text-sm hidden sm:inline">GitHub</span>
             </motion.a>
           </div>
         </div>

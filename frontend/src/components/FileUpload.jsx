@@ -74,7 +74,7 @@ const FileUpload = ({ onFileSelect, loading }) => {
           `}
         >
           <div className={`
-            relative glass rounded-2xl p-12 border-2 border-dashed
+            relative glass rounded-2xl p-6 sm:p-12 border-2 border-dashed
             ${dragActive ? 'border-indigo-400 bg-indigo-500/10' : 'border-white/20'}
             ${loading ? 'opacity-50 pointer-events-none' : ''}
             transition-all duration-300

@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
-import { CheckCircle, Download, RefreshCw, ArrowLeft } from 'lucide-react';
+import { CheckCircle, Download, RefreshCw, ArrowLeft, Pen } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 
-const MCQResults = ({ mcqs, onGenerateMore, onReset }) => {
+const MCQResults = ({ mcqs, onGenerateMore, onReset, onAttemptQuiz }) => {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -56,14 +56,15 @@ const MCQResults = ({ mcqs, onGenerateMore, onReset }) => {
 
       // Options
       doc.setFont('helvetica', 'normal');
-      const options = ['A', 'B', 'C', 'D'];
-      mcq.options.forEach((option, optIndex) => {
+      const optionsArray = Array.isArray(mcq.options) ? mcq.options : Object.values(mcq.options);
+      optionsArray.forEach((option, optIndex) => {
         if (yPosition > pageHeight - 40) {
           doc.addPage();
           yPosition = margin;
         }
-        const isCorrect = mcq.correct_answer === options[optIndex] || 
-                         mcq.correct_answer === option;
+        const optionLabel = String.fromCharCode(65 + optIndex);
+        const correctAnswer = mcq.answer || mcq.correct_answer;
+        const isCorrect = correctAnswer === optionLabel || correctAnswer === option;
         if (isCorrect) {
           doc.setFont('helvetica', 'bold');
           doc.setTextColor(0, 128, 0);
@@ -71,7 +72,7 @@ const MCQResults = ({ mcqs, onGenerateMore, onReset }) => {
           doc.setFont('helvetica', 'normal');
           doc.setTextColor(0, 0, 0);
         }
-        const optionText = `   ${options[optIndex]}. ${option}`;
+        const optionText = `   ${optionLabel}. ${option}`;
         const splitOption = doc.splitTextToSize(optionText, pageWidth - 2 * margin - 10);
         doc.text(splitOption, margin, yPosition);
         yPosition += 7 * splitOption.length;
@@ -111,39 +112,55 @@ const MCQResults = ({ mcqs, onGenerateMore, onReset }) => {
             <CheckCircle className="w-12 h-12 text-green-400" />
           </div>
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gradient">
-            MCQs Generated Successfully!
+            Answer Key - All Correct Answers
           </h2>
           <p className="text-gray-400 mb-6">
-            {mcqs.length} {mcqs.length === 1 ? 'question' : 'questions'} generated
+            {mcqs.length} {mcqs.length === 1 ? 'question' : 'questions'} with answers shown
           </p>
 
-          {/* Action Buttons */}
-          <div className="flex flex-wrap items-center justify-center gap-4">
+          {/* Primary Action - Attempt Quiz Button */}
+          {onAttemptQuiz && (
             <motion.button
-              onClick={downloadPDF}
-              className="flex items-center space-x-2 px-6 py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold hover:shadow-lg hover:shadow-green-500/50 transition-all"
+              onClick={onAttemptQuiz}
+              className="mb-6 px-8 py-4 rounded-xl bg-gradient-to-r from-purple-500 to-pink-600 text-white font-semibold flex items-center justify-center space-x-2 mx-auto hover:shadow-lg hover:shadow-purple-500/50 transition-all"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Download className="w-5 h-5" />
+              <Pen className="w-5 h-5" />
+              <span>Re-attempt Quiz</span>
+            </motion.button>
+          )}
+
+          {/* Secondary & Tertiary Actions */}
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            {/* Secondary: Download PDF */}
+            <motion.button
+              onClick={downloadPDF}
+              className="flex items-center space-x-2 px-6 py-3 rounded-xl glass border border-green-500/40 text-white font-semibold hover:bg-green-500/20 hover:border-green-500/60 transition-all"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Download className="w-5 h-5 text-green-400" />
               <span>Download PDF</span>
             </motion.button>
 
+            {/* Secondary: Generate More */}
             <motion.button
               onClick={onGenerateMore}
-              className="flex items-center space-x-2 px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold hover:shadow-lg hover:shadow-indigo-500/50 transition-all"
+              className="flex items-center space-x-2 px-6 py-3 rounded-xl glass border border-indigo-500/40 text-white font-semibold hover:bg-indigo-500/20 hover:border-indigo-500/60 transition-all"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <RefreshCw className="w-5 h-5" />
+              <RefreshCw className="w-5 h-5 text-indigo-400" />
               <span>Generate More</span>
             </motion.button>
 
+            {/* Tertiary: New PDF */}
             <motion.button
               onClick={onReset}
-              className="flex items-center space-x-2 px-6 py-3 rounded-xl glass border border-white/20 text-white font-semibold hover:bg-white/10 transition-all"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              className="flex items-center space-x-2 px-6 py-3 rounded-xl glass border border-white/10 text-gray-400 font-semibold hover:bg-white/5 hover:border-white/20 hover:text-white transition-all"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
               <ArrowLeft className="w-5 h-5" />
               <span>New PDF</span>
@@ -162,7 +179,7 @@ const MCQResults = ({ mcqs, onGenerateMore, onReset }) => {
             <motion.div
               key={index}
               variants={itemVariants}
-              className="glass rounded-2xl p-6 border border-white/10 hover:border-indigo-400/30 transition-all group"
+              className="glass rounded-2xl p-4 sm:p-6 border border-white/10 hover:border-indigo-400/30 transition-all group"
               whileHover={{ y: -5 }}
             >
               {/* Question */}
@@ -170,17 +187,22 @@ const MCQResults = ({ mcqs, onGenerateMore, onReset }) => {
                 <span className="inline-block px-3 py-1 rounded-lg bg-indigo-500/20 text-indigo-300 text-sm font-semibold mb-3">
                   Question {index + 1}
                 </span>
-                <h3 className="text-xl font-semibold text-white">
+                <h3 className="text-lg sm:text-xl font-semibold text-white">
                   {mcq.question}
                 </h3>
               </div>
 
               {/* Options */}
               <div className="space-y-3">
-                {mcq.options.map((option, optIndex) => {
-                  const optionLabel = String.fromCharCode(65 + optIndex); // A, B, C, D
-                  const isCorrect = mcq.correct_answer === optionLabel || 
-                                   mcq.correct_answer === option;
+                {(Array.isArray(mcq.options) ? mcq.options : Object.entries(mcq.options)).map((item, optIndex) => {
+                  // Handle both array format ["opt1", "opt2"] and object format {"A": "opt1", "B": "opt2"}
+                  const optionLabel = Array.isArray(mcq.options) 
+                    ? String.fromCharCode(65 + optIndex) // A, B, C, D for array
+                    : item[0]; // Use key from object
+                  const option = Array.isArray(mcq.options) ? item : item[1];
+                  
+                  const correctAnswer = mcq.answer || mcq.correct_answer;
+                  const isCorrect = correctAnswer === optionLabel || correctAnswer === option;
 
                   return (
                     <motion.div
@@ -213,6 +235,63 @@ const MCQResults = ({ mcqs, onGenerateMore, onReset }) => {
               </div>
             </motion.div>
           ))}
+        </motion.div>
+
+        {/* Action Buttons - Bottom */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          className="mt-8 sm:mt-12 text-center px-4"
+        >
+          {/* Primary Action - Attempt Quiz Button */}
+          {onAttemptQuiz && (
+            <motion.button
+              onClick={onAttemptQuiz}
+              className="mb-4 sm:mb-6 w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-xl bg-gradient-to-r from-purple-500 to-pink-600 text-white font-semibold flex items-center justify-center space-x-2 mx-auto hover:shadow-lg hover:shadow-purple-500/50 transition-all text-sm sm:text-base"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Pen className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span>Re-attempt Quiz</span>
+            </motion.button>
+          )}
+
+          {/* Secondary & Tertiary Actions */}
+          <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 sm:gap-4">
+            {/* Secondary: Download PDF */}
+            <motion.button
+              onClick={downloadPDF}
+              className="w-full sm:w-auto flex items-center justify-center space-x-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl glass border border-green-500/40 text-white font-semibold hover:bg-green-500/20 hover:border-green-500/60 transition-all text-sm sm:text-base"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Download className="w-4 h-4 sm:w-5 sm:h-5 text-green-400" />
+              <span>Download PDF</span>
+            </motion.button>
+
+            {/* Secondary: Generate More */}
+            <motion.button
+              onClick={onGenerateMore}
+              className="w-full sm:w-auto flex items-center justify-center space-x-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl glass border border-indigo-500/40 text-white font-semibold hover:bg-indigo-500/20 hover:border-indigo-500/60 transition-all text-sm sm:text-base"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-400" />
+              <span>Generate More</span>
+            </motion.button>
+
+            {/* Tertiary: New PDF */}
+            <motion.button
+              onClick={onReset}
+              className="w-full sm:w-auto flex items-center justify-center space-x-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl glass border border-white/10 text-gray-400 font-semibold hover:bg-white/5 hover:border-white/20 hover:text-white transition-all text-sm sm:text-base"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span>New PDF</span>
+            </motion.button>
+          </div>
         </motion.div>
       </div>
     </section>

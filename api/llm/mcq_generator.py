@@ -158,7 +158,7 @@ Return JSON only (no extra text):
         {{
             "question": "Question?",
             "options": ["A", "B", "C", "D"],
-            "correct_answer": "A"
+            "answer": "A"
         }}
     ]
 }}
@@ -166,7 +166,7 @@ Return JSON only (no extra text):
 Rules:
 1. Exactly {num} questions
 2. 4 options per question
-3. 1 correct answer
+3. 1 correct answer (field: "answer")
 4. Based on text only
 5. JSON only, no markdown
 

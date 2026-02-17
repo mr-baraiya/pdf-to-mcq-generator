@@ -6,6 +6,7 @@ import Hero from './components/Hero';
 import FileUpload from './components/FileUpload';
 import LoadingAnimation from './components/LoadingAnimation';
 import MCQResults from './components/MCQResults';
+import MCQDisplay from './components/MCQDisplay';
 import Features from './components/Features';
 import AnimatedBackground from './components/AnimatedBackground';
 import { AlertCircle } from 'lucide-react';
@@ -17,6 +18,7 @@ function App() {
   const [error, setError] = useState('');
   const [extractedText, setExtractedText] = useState('');
   const [showUpload, setShowUpload] = useState(false);
+  const [viewMode, setViewMode] = useState('results'); // 'results' or 'attempt'
 
   const handleFileUpload = async (file) => {
     setLoading(true);
@@ -58,8 +60,15 @@ function App() {
         num_questions: numQuestions
       });
       
+      // Normalize response - handle both 'answer' and 'correct_answer' fields
+      const questions = response.data.questions.map(q => ({
+        ...q,
+        answer: q.answer || q.correct_answer // Support both field names
+      }));
+      
       // Append new questions to existing ones
-      setMcqs(prev => [...prev, ...response.data.questions]);
+      setMcqs(prev => [...prev, ...questions]);
+      setViewMode('attempt'); // Start with quiz attempt
       setLoading(false);
     } catch (err) {
       setError('Error generating MCQs: ' + (err.response?.data?.detail || err.message));
@@ -72,6 +81,7 @@ function App() {
     setExtractedText('');
     setError('');
     setShowUpload(false);
+    setViewMode('results');
   };
 
   const handleGenerateMore = async () => {
@@ -141,13 +151,24 @@ function App() {
         {/* Loading State */}
         {loading && <LoadingAnimation stage={loadingStage} />}
 
-        {/* MCQ Results */}
+        {/* MCQ Results or Quiz Attempt */}
         {!loading && mcqs.length > 0 && (
-          <MCQResults 
-            mcqs={mcqs} 
-            onReset={handleReset}
-            onGenerateMore={handleGenerateMore}
-          />
+          <>
+            {viewMode === 'attempt' ? (
+              <MCQDisplay 
+                mcqs={mcqs} 
+                onReset={handleReset}
+                onViewAnswers={() => setViewMode('results')}
+              />
+            ) : (
+              <MCQResults 
+                mcqs={mcqs} 
+                onReset={handleReset}
+                onGenerateMore={handleGenerateMore}
+                onAttemptQuiz={() => setViewMode('attempt')}
+              />
+            )}
+          </>
         )}
 
         {/* Features Section - Show on initial load */}

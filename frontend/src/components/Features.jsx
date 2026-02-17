@@ -10,8 +10,8 @@ const features = [
   },
   {
     icon: Sparkles,
-    title: 'AI-Powered',
-    description: 'Advanced language models ensure high-quality, contextually relevant questions',
+    title: 'Smart Questions',
+    description: 'Advanced technology ensures high-quality, contextually relevant questions',
     color: 'from-indigo-400 to-purple-500'
   },
   {

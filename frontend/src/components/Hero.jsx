@@ -99,7 +99,7 @@ const Hero = ({ onGetStarted }) => {
         {/* CTA Buttons */}
         <motion.div
           variants={itemVariants}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12"
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-8 sm:mb-12"
         >
           <motion.button
             onClick={onGetStarted}
@@ -127,7 +127,7 @@ const Hero = ({ onGetStarted }) => {
         {/* Feature Pills */}
         <motion.div
           variants={itemVariants}
-          className="flex flex-wrap items-center justify-center gap-6 text-sm text-gray-400"
+          className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs sm:text-sm text-gray-400"
         >
           <div className="flex items-center space-x-2">
             <Zap className="w-5 h-5 text-indigo-400" />
@@ -139,7 +139,7 @@ const Hero = ({ onGetStarted }) => {
           </div>
           <div className="flex items-center space-x-2">
             <Sparkles className="w-5 h-5 text-blue-400" />
-            <span>AI Powered</span>
+            <span>Smart Generation</span>
           </div>
         </motion.div>
       </motion.div>
