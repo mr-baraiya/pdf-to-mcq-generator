@@ -1,5 +1,7 @@
 # PDF to MCQ Generator
 
+🌐 **Live Demo:** [https://pdf2mcq-henna.vercel.app/](https://pdf2mcq-henna.vercel.app/)
+
 A smart web application that automatically generates Multiple Choice Questions (MCQs) from PDF documents using AI models with intelligent fallback (Local Ollama → Groq → Gemini).
 
 **Live Features:**
