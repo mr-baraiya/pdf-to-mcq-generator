@@ -1,8 +1,8 @@
 {
   "version": 2,
 
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist",
+  "buildCommand": "cd frontend && npm install && npm run build",
+  "outputDirectory": "frontend/dist",
 
   "functions": {
     "api/index.py": {
@@ -12,19 +12,15 @@
 
   "routes": [
     {
-      "src": "/api/(.*)",
+      "src": "^/api/(.*)",
       "dest": "api/index.py"
     },
     {
       "handle": "filesystem"
     },
     {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "src": "^/(.*)",
+      "dest": "/frontend/dist/index.html"
     }
-  ],
-
-  "env": {
-    "PYTHONUNBUFFERED": "1"
-  }
+  ]
 }
