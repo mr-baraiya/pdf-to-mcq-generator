@@ -6,7 +6,6 @@ import re
 import logging
 import requests
 from groq import Groq
-import google.generativeai as genai
 
 log = logging.getLogger(__name__)
 
@@ -188,7 +187,7 @@ def generate_with_groq(txt, num):
 
 
 def generate_with_gemini(txt, num):
-    """Generate MCQ using Gemini API"""
+    """Generate MCQ using Gemini REST API (lightweight, no SDK)"""
     
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
@@ -197,13 +196,31 @@ def generate_with_gemini(txt, num):
     log.info(f"🧠 Generating {num} MCQs with Gemini")
     
     try:
-        genai.configure(api_key=api_key)
-        model = genai.GenerativeModel('gemini-pro')
-        
         prompt = make_prompt(txt, num)
         
-        response = model.generate_content(prompt)
-        resp = response.text
+        # Use Gemini REST API directly (no heavy SDK)
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={api_key}"
+        
+        payload = {
+            "contents": [{
+                "parts": [{"text": prompt}]
+            }],
+            "generationConfig": {
+                "temperature": 0.7,
+                "maxOutputTokens": 2000
+            }
+        }
+        
+        response = requests.post(url, json=payload, timeout=30)
+        
+        if response.status_code != 200:
+            raise Exception(f"Gemini API error: {response.status_code} - {response.text}")
+        
+        result = response.json()
+        resp = result.get("candidates", [{}])[0].get("content", {}).get("parts", [{}])[0].get("text", "")
+        
+        if not resp:
+            raise Exception("Empty response from Gemini")
         
         qs = parse_response(resp)
         
