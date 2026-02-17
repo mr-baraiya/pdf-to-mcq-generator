@@ -1,9 +1,10 @@
-# Generate MCQ questions using Groq AI or Gemini AI (Smart Load Balancing)
+# Generate MCQ questions using Local Ollama (priority), Groq AI, or Gemini AI
 
 import os
 import json
 import re
 import logging
+import requests
 from groq import Groq
 import google.generativeai as genai
 
@@ -11,6 +12,29 @@ log = logging.getLogger(__name__)
 
 # Track last used API for round-robin
 _last_api_used = None
+_ollama_available = None  # Cache Ollama availability check
+
+
+def check_ollama_available():
+    """Check if local Ollama is available"""
+    global _ollama_available
+    
+    # Use cached result if available
+    if _ollama_available is not None:
+        return _ollama_available
+    
+    ollama_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+    
+    try:
+        response = requests.get(f"{ollama_url}/api/tags", timeout=2)
+        _ollama_available = response.status_code == 200
+        if _ollama_available:
+            log.info(f"✅ Local Ollama detected at {ollama_url}")
+        return _ollama_available
+    except Exception as e:
+        log.info(f"ℹ️ Local Ollama not available: {str(e)}")
+        _ollama_available = False
+        return False
 
 
 def select_api(text_size_bytes):
@@ -49,7 +73,7 @@ def select_api(text_size_bytes):
 
 
 def generate_mcqs(txt, num=5):
-    """Generate MCQ from text using smart API selection"""
+    """Generate MCQ from text - Try Ollama first, then fallback to Groq/Gemini"""
     
     # Validate
     if not txt or not txt.strip():
@@ -58,7 +82,15 @@ def generate_mcqs(txt, num=5):
     if num < 1 or num > 20:
         raise ValueError("Questions: 1-20")
     
-    # Select API based on text size
+    # Priority 1: Try local Ollama first
+    if check_ollama_available():
+        try:
+            log.info("🏠 Using Local Ollama (Priority)")
+            return generate_with_ollama(txt, num)
+        except Exception as e:
+            log.warning(f"⚠️ Ollama failed: {str(e)}, falling back to cloud APIs")
+    
+    # Priority 2: Fallback to Groq/Gemini
     text_size = len(txt.encode('utf-8'))
     selected_api = select_api(text_size)
     
@@ -67,6 +99,50 @@ def generate_mcqs(txt, num=5):
         return generate_with_gemini(txt, num)
     else:
         return generate_with_groq(txt, num)
+
+
+def generate_with_ollama(txt, num):
+    """Generate MCQ using local Ollama"""
+    
+    ollama_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+    ollama_model = os.getenv("OLLAMA_MODEL", "llama3.2")
+    
+    log.info(f"🏠 Generating {num} MCQs with Ollama ({ollama_model})")
+    
+    try:
+        prompt = make_prompt(txt, num)
+        
+        response = requests.post(
+            f"{ollama_url}/api/generate",
+            json={
+                "model": ollama_model,
+                "prompt": prompt,
+                "stream": False,
+                "options": {
+                    "temperature": 0.7,
+                    "num_predict": 2000
+                }
+            },
+            timeout=60
+        )
+        
+        if response.status_code != 200:
+            raise Exception(f"Ollama API error: {response.status_code}")
+        
+        result = response.json()
+        resp = result.get("response", "")
+        
+        qs = parse_response(resp)
+        
+        if not qs:
+            raise Exception("No questions generated")
+        
+        log.info(f"✅ Ollama: Generated {len(qs)} questions")
+        return qs
+        
+    except Exception as e:
+        log.error(f"❌ Ollama error: {str(e)}")
+        raise
 
 
 def generate_with_groq(txt, num):
