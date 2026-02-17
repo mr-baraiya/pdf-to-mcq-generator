@@ -1,11 +1,12 @@
 # PDF to MCQ Generator
 
-An AI-powered web application that automatically generates Multiple Choice Questions (MCQs) from PDF documents using advanced AI models (Groq/Gemini).
+A smart web application that automatically generates Multiple Choice Questions (MCQs) from PDF documents using AI models with intelligent fallback (Local Ollama → Groq → Gemini).
 
 **Live Features:**
+- Local LLM Support - Free & private MCQ generation with Ollama
+- Smart Fallback System - Automatically switches between Ollama, Groq, and Gemini
 - Quiz Attempt Mode - Try quiz before seeing answers
 - PDF Export - Download questions and results as PDF
-- Smart AI Selection - Automatically chooses best AI model
 - Cloud Storage - Secure PDF storage with Vercel Blob
 - Interactive Quiz - Real-time feedback and scoring
 
@@ -15,8 +16,9 @@ An AI-powered web application that automatically generates Multiple Choice Quest
 
 ### Core Functionality
 - **PDF Upload & Processing** - Drag-and-drop interface with cloud storage
-- **AI-Powered Generation** - Uses Groq (Llama 3.3) and Gemini AI models
-- **Smart Load Balancing** - Automatically selects optimal AI based on content size
+- **Local Ollama Support** - Free, private MCQ generation (Priority 1)
+- **Cloud AI Fallback** - Uses Groq (Llama 3.3) and Gemini when Ollama unavailable
+- **Smart Fallback System** - Automatically tries local first, then cloud APIs
 - **Quiz Attempt Mode** - Interactive quiz interface with instant feedback
 - **Answer Key View** - Detailed solutions with correct answers highlighted
 - **PDF Export** - Download questions and results in PDF format
@@ -53,10 +55,11 @@ An AI-powered web application that automatically generates Multiple Choice Quest
 - **jsPDF** - PDF generation
 - **Lucide React** - Icon library
 
-### AI Models
-- **Groq (Llama 3.3 70B)** - Primary model for fast generation
-- **Google Gemini Pro** - Advanced understanding for complex texts
-- **Smart Selection** - Auto-switches based on document size
+### AI Models (Smart Fallback System)
+- **Local Ollama** - Priority 1: Free, private local LLM (optional)
+- **Groq (Llama 3.3 70B)** - Priority 2: Fast cloud inference
+- **Google Gemini Pro** - Priority 3: Advanced AI fallback
+- **Smart Selection** - Auto-switches based on availability and document size
 
 ---
 
@@ -120,8 +123,9 @@ pdf-to-mcq-generator/
 ### Prerequisites
 - **Python 3.8+**
 - **Node.js 16+**
-- **Groq API Key** (get from https://console.groq.com)
-- **Gemini API Key** (get from https://makersuite.google.com/app/apikey)
+- **Ollama** (optional - for free local LLM generation)
+- **Groq API Key** (fallback - get from https://console.groq.com)
+- **Gemini API Key** (fallback - get from https://makersuite.google.com/app/apikey)
 - **Vercel Account** (for Blob storage - optional for local dev)
 
 ### 1. Clone Repository
@@ -136,7 +140,11 @@ cd pdf-to-mcq-generator
 Create a `.env` file in the root directory:
 
 ```bash
-# AI API Keys
+# Local Ollama (Priority 1 - Optional but recommended)
+OLLAMA_HOST=http://localhost:11434
+OLLAMA_MODEL=llama3.2
+
+# Cloud API Keys (Fallback when Ollama unavailable)
 GROQ_API_KEY=your_groq_api_key_here
 GEMINI_API_KEY=your_gemini_api_key_here
 
@@ -144,10 +152,21 @@ GEMINI_API_KEY=your_gemini_api_key_here
 BLOB_READ_WRITE_TOKEN=your_vercel_blob_token_here
 ```
 
+**Setup Options:**
+
+**Option A: Local Ollama (Free & Private) - Recommended**
+1. Install Ollama: https://ollama.ai/download
+2. Pull a model: `ollama pull llama3.2`
+3. Start Ollama: `ollama serve` (runs on port 11434)
+4. The app will automatically use Ollama first
+
+**Option B: Cloud APIs Only**
 Get API keys:
 - **Groq**: https://console.groq.com/keys
 - **Gemini**: https://makersuite.google.com/app/apikey
 - **Vercel Blob**: https://vercel.com/docs/storage/vercel-blob
+
+**Smart Fallback:** The system tries Ollama first, then falls back to Groq/Gemini if unavailable.
 
 ### 3. Install Dependencies
 

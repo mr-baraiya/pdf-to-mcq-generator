@@ -23,7 +23,7 @@ def check_ollama_available():
     if _ollama_available is not None:
         return _ollama_available
     
-    ollama_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+    ollama_url = os.getenv("OLLAMA_HOST", "http://localhost:11434")
     
     try:
         response = requests.get(f"{ollama_url}/api/tags", timeout=2)
@@ -104,7 +104,7 @@ def generate_mcqs(txt, num=5):
 def generate_with_ollama(txt, num):
     """Generate MCQ using local Ollama"""
     
-    ollama_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+    ollama_url = os.getenv("OLLAMA_HOST", "http://localhost:11434")
     ollama_model = os.getenv("OLLAMA_MODEL", "llama3.2")
     
     log.info(f"🏠 Generating {num} MCQs with Ollama ({ollama_model})")
