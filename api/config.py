@@ -27,11 +27,10 @@ def create_app():
         is_vercel = os.getenv("VERCEL") == "1"
         log.info(f"Environment: {'Vercel' if is_vercel else 'Local'}")
         
-        # Create FastAPI app
+        # Create FastAPI app (no root_path for Vercel)
         app = FastAPI(
             title="PDF to MCQ Generator API",
-            version="1.0.0",
-            root_path="/api" if is_vercel else ""
+            version="1.0.0"
         )
         
         # Allow frontend to call this backend

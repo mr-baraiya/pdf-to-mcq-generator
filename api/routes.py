@@ -21,7 +21,8 @@ except ImportError as e:
 def setup_routes(app):
     
     # Health check
-    @app.get("/")
+    @app.get("/api")
+    @app.get("/api/")
     def home():
         return {
             "message": "PDF to MCQ Generator API",
@@ -30,7 +31,7 @@ def setup_routes(app):
     
     
     # Upload PDF and extract text
-    @app.post("/upload-pdf")
+    @app.post("/api/upload-pdf")
     async def upload_pdf(file: UploadFile = File(...)):
         try:
             # Check if PDF
@@ -79,7 +80,7 @@ def setup_routes(app):
     
     
     # Generate MCQ questions
-    @app.post("/generate-mcqs", response_model=MCQResponse)
+    @app.post("/api/generate-mcqs", response_model=MCQResponse)
     async def make_mcqs(req: MCQRequest):
         try:
             log.info(f"Generating {req.num_questions} MCQs")
