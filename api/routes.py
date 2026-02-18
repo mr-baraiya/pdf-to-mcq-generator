@@ -4,13 +4,18 @@ import io
 import logging
 from fastapi import FastAPI, UploadFile, File, HTTPException
 
-from api.config import MAX_FILE_SIZE
-from api.pdf.extractor import extract_text_from_pdf
-from api.llm.mcq_generator import generate_mcqs
-from api.utils.blob_storage import upload_pdf_to_blob, delete_pdf_from_blob
-from api.models import MCQRequest, MCQResponse
-
 log = logging.getLogger(__name__)
+
+try:
+    from api.config import MAX_FILE_SIZE
+    from api.pdf.extractor import extract_text_from_pdf
+    from api.llm.mcq_generator import generate_mcqs
+    from api.utils.blob_storage import upload_pdf_to_blob, delete_pdf_from_blob
+    from api.models import MCQRequest, MCQResponse
+    log.info("✓ All route dependencies imported")
+except ImportError as e:
+    log.error(f"✗ Import error in routes: {str(e)}")
+    raise
 
 
 def setup_routes(app):

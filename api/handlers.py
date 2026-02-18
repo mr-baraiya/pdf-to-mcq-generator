@@ -1,5 +1,6 @@
 # Handle startup and errors
 
+import os
 import logging
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
@@ -9,7 +10,14 @@ log = logging.getLogger(__name__)
 
 
 def setup_event_handlers(app):
-    # When app starts
+    # Skip startup events in serverless (Vercel)
+    is_vercel = os.getenv("VERCEL") == "1"
+    
+    if is_vercel:
+        log.info("Running on Vercel - skipping startup events")
+        return
+    
+    # When app starts (local only)
     @app.on_event("startup")
     async def on_start():
         log.info("Starting API...")

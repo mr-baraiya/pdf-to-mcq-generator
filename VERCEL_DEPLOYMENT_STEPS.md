@@ -1,5 +1,26 @@
 # Vercel Deployment Steps
 
+## 🔥 Recent Fixes Applied
+
+### Fixed: "This Serverless Function has crashed" Error
+**Problem**: FUNCTION_INVOCATION_FAILED on Vercel deployment
+
+**Root Cause**:
+1. Startup event handlers don't work well with serverless cold starts
+2. Missing `api/__init__.py` package file
+3. Incorrect Mangum lifespan configuration
+4. Vercel routing configuration issues
+
+**Solutions Applied**:
+1. ✅ Made startup handlers conditional (skip on Vercel)
+2. ✅ Created `api/__init__.py` package file
+3. ✅ Changed Mangum to `lifespan="auto"`
+4. ✅ Updated `vercel.json` routing from `/api/index.py` to `/api/index`
+5. ✅ Added comprehensive error logging to track issues
+6. ✅ Python 3.9 runtime specification
+
+---
+
 ## Changes Made for Vercel Deployment
 
 ### 1. File Size Limit Increased to 5MB
