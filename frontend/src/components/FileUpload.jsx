@@ -1,10 +1,13 @@
 import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Upload, FileText, X, CheckCircle } from 'lucide-react';
+import { Upload, FileText, X, CheckCircle, AlertCircle } from 'lucide-react';
+
+const MAX_FILE_SIZE = 3 * 1024 * 1024; // 3MB in bytes
 
 const FileUpload = ({ onFileSelect, loading }) => {
   const [dragActive, setDragActive] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [error, setError] = useState(null);
 
   const handleDrag = useCallback((e) => {
     e.preventDefault();
@@ -24,8 +27,15 @@ const FileUpload = ({ onFileSelect, loading }) => {
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const file = e.dataTransfer.files[0];
       if (file.type === 'application/pdf') {
+        if (file.size > MAX_FILE_SIZE) {
+          setError(`File too large. Maximum size is 3MB. Your file is ${(file.size / 1024 / 1024).toFixed(2)}MB`);
+          return;
+        }
+        setError(null);
         setSelectedFile(file);
         onFileSelect(file);
+      } else {
+        setError('Please upload a PDF file');
       }
     }
   }, [onFileSelect]);
@@ -33,6 +43,11 @@ const FileUpload = ({ onFileSelect, loading }) => {
   const handleFileInput = (e) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
+      if (file.size > MAX_FILE_SIZE) {
+        setError(`File too large. Maximum size is 3MB. Your file is ${(file.size / 1024 / 1024).toFixed(2)}MB`);
+        return;
+      }
+      setError(null);
       setSelectedFile(file);
       onFileSelect(file);
     }
@@ -40,6 +55,7 @@ const FileUpload = ({ onFileSelect, loading }) => {
 
   const clearFile = () => {
     setSelectedFile(null);
+    setError(null);
   };
 
   return (
@@ -58,6 +74,19 @@ const FileUpload = ({ onFileSelect, loading }) => {
             Drag and drop your PDF or click to browse
           </p>
         </motion.div>
+
+        {/* Error Message */}
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="mb-4 p-4 rounded-lg bg-red-500/10 border border-red-500/30 flex items-center space-x-3"
+          >
+            <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
+            <p className="text-red-300 text-sm">{error}</p>
+          </motion.div>
+        )}
 
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
@@ -123,7 +152,7 @@ const FileUpload = ({ onFileSelect, loading }) => {
                     </h3>
                     <p className="text-gray-400 mb-4">or click to browse</p>
                     <div className="px-6 py-2 rounded-lg bg-indigo-500/20 border border-indigo-400/30 text-indigo-300 text-sm">
-                      Supports PDF files up to 10MB
+                      Supports PDF files up to 3MB
                     </div>
                   </motion.div>
                 ) : (

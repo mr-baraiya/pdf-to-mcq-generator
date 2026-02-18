@@ -12,6 +12,9 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
 
+# File upload limits (Vercel serverless has 4.5MB limit, set to 3MB for safety)
+MAX_FILE_SIZE = 3 * 1024 * 1024  # 3MB in bytes
+
 
 def create_app():
     # Create FastAPI app

@@ -4,6 +4,7 @@ import io
 import logging
 from fastapi import FastAPI, UploadFile, File, HTTPException
 
+from api.config import MAX_FILE_SIZE
 from api.pdf.extractor import extract_text_from_pdf
 from api.llm.mcq_generator import generate_mcqs
 from api.utils.blob_storage import upload_pdf_to_blob, delete_pdf_from_blob
@@ -33,6 +34,13 @@ def setup_routes(app):
             
             # Read file
             content = await file.read()
+            
+            # Check file size (3MB limit for Vercel serverless)
+            if len(content) > MAX_FILE_SIZE:
+                raise HTTPException(
+                    status_code=413, 
+                    detail=f"File too large. Maximum size is 3MB. Your file is {len(content) / 1024 / 1024:.2f}MB"
+                )
             
             # Upload to cloud storage
             log.info(f"Uploading: {file.filename}")
