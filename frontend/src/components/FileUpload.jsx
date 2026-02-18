@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Upload, FileText, X, CheckCircle, AlertCircle } from 'lucide-react';
 
-const MAX_FILE_SIZE = 3 * 1024 * 1024; // 3MB in bytes
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
 
 const FileUpload = ({ onFileSelect, loading }) => {
   const [dragActive, setDragActive] = useState(false);
@@ -28,7 +28,7 @@ const FileUpload = ({ onFileSelect, loading }) => {
       const file = e.dataTransfer.files[0];
       if (file.type === 'application/pdf') {
         if (file.size > MAX_FILE_SIZE) {
-          setError(`File too large. Maximum size is 3MB. Your file is ${(file.size / 1024 / 1024).toFixed(2)}MB`);
+          setError(`File too large. Maximum size is 5MB. Your file is ${(file.size / 1024 / 1024).toFixed(2)}MB`);
           return;
         }
         setError(null);
@@ -44,7 +44,7 @@ const FileUpload = ({ onFileSelect, loading }) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       if (file.size > MAX_FILE_SIZE) {
-        setError(`File too large. Maximum size is 3MB. Your file is ${(file.size / 1024 / 1024).toFixed(2)}MB`);
+        setError(`File too large. Maximum size is 5MB. Your file is ${(file.size / 1024 / 1024).toFixed(2)}MB`);
         return;
       }
       setError(null);
@@ -152,7 +152,7 @@ const FileUpload = ({ onFileSelect, loading }) => {
                     </h3>
                     <p className="text-gray-400 mb-4">or click to browse</p>
                     <div className="px-6 py-2 rounded-lg bg-indigo-500/20 border border-indigo-400/30 text-indigo-300 text-sm">
-                      Supports PDF files up to 3MB
+                      Supports PDF files up to 5MB
                     </div>
                   </motion.div>
                 ) : (

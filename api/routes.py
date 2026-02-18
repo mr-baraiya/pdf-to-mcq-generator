@@ -35,11 +35,11 @@ def setup_routes(app):
             # Read file
             content = await file.read()
             
-            # Check file size (3MB limit for Vercel serverless)
+            # Check file size (5MB limit)
             if len(content) > MAX_FILE_SIZE:
                 raise HTTPException(
                     status_code=413, 
-                    detail=f"File too large. Maximum size is 3MB. Your file is {len(content) / 1024 / 1024:.2f}MB"
+                    detail=f"File too large. Maximum size is 5MB. Your file is {len(content) / 1024 / 1024:.2f}MB"
                 )
             
             # Upload to cloud storage

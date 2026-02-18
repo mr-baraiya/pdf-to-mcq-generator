@@ -42,7 +42,7 @@ function App() {
       let errorMessage = 'Error uploading file: ';
       
       if (err.response?.status === 413) {
-        errorMessage = 'File too large! Maximum size is 3MB. Please upload a smaller PDF file.';
+        errorMessage = 'File too large! Maximum size is 5MB. Please upload a smaller PDF file.';
       } else {
         errorMessage += err.response?.data?.detail || err.message;
       }
