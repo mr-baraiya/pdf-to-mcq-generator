@@ -124,7 +124,7 @@ def generate_with_ollama(txt, num):
                     "num_predict": 4000
                 }
             },
-            timeout=120
+            timeout=180
         )
         
         if response.status_code != 200:
@@ -200,8 +200,8 @@ def generate_with_gemini(txt, num):
     
     try:
         genai.configure(api_key=api_key)
-        # Using gemini-2.0-flash (gemini-1.5-flash is deprecated/404)
-        model = genai.GenerativeModel('gemini-2.0-flash')
+        # Using gemini-1.5-flash-8b (faster/cheaper variant) as fallback for quota issues
+        model = genai.GenerativeModel('gemini-1.5-flash-8b')
         
         prompt = make_prompt(txt, num)
         
