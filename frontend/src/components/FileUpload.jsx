@@ -1,8 +1,15 @@
 import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Upload, FileText, X, CheckCircle } from 'lucide-react';
+import { Upload, FileText, X, CheckCircle, Sparkles, Zap, Brain, ChevronDown } from 'lucide-react';
 
-const FileUpload = ({ onFileSelect, loading }) => {
+const FileUpload = ({ 
+  onFileSelect, 
+  loading,
+  selectedModel,
+  onModelChange,
+  numQuestions,
+  onNumQuestionsChange
+}) => {
   const [dragActive, setDragActive] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
 
@@ -162,6 +169,93 @@ const FileUpload = ({ onFileSelect, loading }) => {
                   </motion.div>
                 )}
               </AnimatePresence>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* AI Model Selection */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="mt-8 glass rounded-2xl p-6 border border-white/10"
+        >
+          <h3 className="text-lg font-semibold mb-4 text-white flex items-center">
+            <Sparkles className="w-5 h-5 mr-2 text-indigo-400" />
+            Generation Settings
+          </h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Model Selection Dropdown */}
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                AI Model
+              </label>
+              <div className="relative">
+                <select
+                  value={selectedModel}
+                  onChange={(e) => onModelChange(e.target.value)}
+                  disabled={loading}
+                  className="w-full appearance-none glass rounded-xl px-4 py-3 pr-10 
+                    border border-white/10 text-white bg-white/5
+                    hover:border-indigo-400/50 hover:bg-white/10
+                    focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent
+                    disabled:opacity-50 disabled:cursor-not-allowed
+                    transition-all duration-200 cursor-pointer"
+                >
+                  <option value="auto" className="bg-gray-900 text-white">
+                    ✨ Auto (Recommended) - Smart Fallback
+                  </option>
+                  <option value="ollama" className="bg-gray-900 text-white">
+                    🏠 Ollama - Local & Free
+                  </option>
+                  <option value="groq" className="bg-gray-900 text-white">
+                    ⚡ Groq - Fast Cloud
+                  </option>
+                  <option value="gemini" className="bg-gray-900 text-white">
+                    🧠 Gemini - Advanced AI
+                  </option>
+                </select>
+                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+              </div>
+              <p className="mt-2 text-xs text-gray-500">
+                {selectedModel === 'auto' && '• Tries Ollama → Groq → Gemini'}
+                {selectedModel === 'ollama' && '• Private, no API costs (requires Ollama running)'}
+                {selectedModel === 'groq' && '• Very fast inference, cloud-based'}
+                {selectedModel === 'gemini' && '• Best for complex documents'}
+              </p>
+            </div>
+
+            {/* Number of Questions Dropdown */}
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Number of Questions
+              </label>
+              <div className="relative">
+                <select
+                  value={numQuestions}
+                  onChange={(e) => onNumQuestionsChange(parseInt(e.target.value))}
+                  disabled={loading}
+                  className="w-full appearance-none glass rounded-xl px-4 py-3 pr-10 
+                    border border-white/10 text-white bg-white/5
+                    hover:border-indigo-400/50 hover:bg-white/10
+                    focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent
+                    disabled:opacity-50 disabled:cursor-not-allowed
+                    transition-all duration-200 cursor-pointer"
+                >
+                  <option value="3" className="bg-gray-900 text-white">3 Questions</option>
+                  <option value="5" className="bg-gray-900 text-white">5 Questions</option>
+                  <option value="10" className="bg-gray-900 text-white">10 Questions</option>
+                  <option value="15" className="bg-gray-900 text-white">15 Questions</option>
+                  <option value="20" className="bg-gray-900 text-white">20 Questions</option>
+                  <option value="25" className="bg-gray-900 text-white">25 Questions</option>
+                  <option value="30" className="bg-gray-900 text-white">30 Questions</option>
+                </select>
+                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+              </div>
+              <p className="mt-2 text-xs text-gray-500">
+                • More questions = longer generation time
+              </p>
             </div>
           </div>
         </motion.div>

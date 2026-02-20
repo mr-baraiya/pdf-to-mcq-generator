@@ -19,6 +19,8 @@ function App() {
   const [extractedText, setExtractedText] = useState('');
   const [showUpload, setShowUpload] = useState(false);
   const [viewMode, setViewMode] = useState('results'); // 'results' or 'attempt'
+  const [selectedModel, setSelectedModel] = useState('auto'); // 'auto', 'ollama', 'groq', 'gemini'
+  const [numQuestions, setNumQuestions] = useState(10); // Number of questions to generate
 
   const handleFileUpload = async (file) => {
     setLoading(true);
@@ -36,15 +38,15 @@ function App() {
       
       setExtractedText(response.data.text);
       
-      // Auto-generate 10 MCQs after upload
-      await handleGenerateMCQs(10, response.data.text);
+      // Auto-generate MCQs after upload using selected settings
+      await handleGenerateMCQs(numQuestions, response.data.text, selectedModel);
     } catch (err) {
       setError('Error uploading file: ' + (err.response?.data?.detail || err.message));
       setLoading(false);
     }
   };
 
-  const handleGenerateMCQs = async (numQuestions, text = extractedText) => {
+  const handleGenerateMCQs = async (numQs = numQuestions, text = extractedText, model = selectedModel) => {
     if (!text) {
       setError('Please upload a PDF first');
       return;
@@ -55,9 +57,15 @@ function App() {
     setError('');
     
     try {
-      const response = await axios.post('/api/generate-mcqs', {
+      // Select the appropriate endpoint based on model
+      let endpoint = '/api/generate-mcqs'; // default auto fallback
+      if (model === 'ollama') endpoint = '/api/generate-mcqs-ollama';
+      else if (model === 'groq') endpoint = '/api/generate-mcqs-groq';
+      else if (model === 'gemini') endpoint = '/api/generate-mcqs-gemini';
+      
+      const response = await axios.post(endpoint, {
         text: text,
-        num_questions: numQuestions
+        num_questions: numQs
       });
       
       // Normalize response - handle both 'answer' and 'correct_answer' fields
@@ -85,8 +93,8 @@ function App() {
   };
 
   const handleGenerateMore = async () => {
-    // Generate 5 more MCQs
-    await handleGenerateMCQs(5, extractedText);
+    // Generate more MCQs using selected settings
+    await handleGenerateMCQs(numQuestions, extractedText, selectedModel);
   };
 
   const handleGetStarted = () => {
@@ -145,7 +153,14 @@ function App() {
 
         {/* File Upload Section */}
         {(showUpload || extractedText) && !loading && mcqs.length === 0 && (
-          <FileUpload onFileSelect={handleFileUpload} loading={loading} />
+          <FileUpload 
+            onFileSelect={handleFileUpload} 
+            loading={loading}
+            selectedModel={selectedModel}
+            onModelChange={setSelectedModel}
+            numQuestions={numQuestions}
+            onNumQuestionsChange={setNumQuestions}
+          />
         )}
 
         {/* Loading State */}
