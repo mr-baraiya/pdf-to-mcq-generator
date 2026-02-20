@@ -200,8 +200,8 @@ def generate_with_gemini(txt, num):
     
     try:
         genai.configure(api_key=api_key)
-        # Using gemini-1.5-flash-8b (faster/cheaper variant) as fallback for quota issues
-        model = genai.GenerativeModel('gemini-1.5-flash-8b')
+        # Using gemini-pro (stable version)
+        model = genai.GenerativeModel('gemini-pro')
         
         prompt = make_prompt(txt, num)
         
