@@ -1,6 +1,6 @@
 # Summary: Dropdown Menus for Model & Question Selection
 
-## ✅ What Was Implemented
+## What Was Implemented
 
 ### Frontend Changes
 
@@ -31,7 +31,7 @@
 
 ---
 
-## 📂 Files Modified
+## Files Modified
 
 ### Frontend Files
 
@@ -59,7 +59,7 @@ backend/
 
 ---
 
-## 🎯 User Journey
+## User Journey
 
 ### Before Changes
 ```
@@ -79,7 +79,7 @@ backend/
 
 ---
 
-## 🖼️ UI Preview
+## UI Preview
 
 ### Desktop Layout (2 Columns)
 ```
@@ -126,7 +126,7 @@ backend/
 
 ---
 
-## 🔧 Technical Implementation
+## Technical Implementation
 
 ### State in App.jsx
 
@@ -198,7 +198,7 @@ const handleGenerateMCQs = async (
 
 ---
 
-## 🎨 Styling Features
+## Styling Features
 
 ### Glass Morphism
 ```css
@@ -221,7 +221,7 @@ grid grid-cols-1 md:grid-cols-2 gap-4
 
 ---
 
-## ✅ Testing Results
+## Testing Results
 
 ### Functionality Tests
 - ✅ Dropdowns render correctly
@@ -246,7 +246,7 @@ grid grid-cols-1 md:grid-cols-2 gap-4
 
 ---
 
-## 🚀 Running the Application
+## Running the Application
 
 ### Terminal 1: Backend
 ```bash
@@ -268,7 +268,7 @@ npm run dev
 
 ---
 
-## 📊 API Endpoints Available
+## API Endpoints Available
 
 | Endpoint | Method | Purpose |
 |----------|--------|---------|
@@ -287,7 +287,7 @@ npm run dev
 
 ---
 
-## 🎓 For Developers
+## For Developers
 
 ### Adding New Models
 
@@ -320,7 +320,7 @@ No backend changes needed!
 
 ---
 
-## 📚 Documentation
+## Documentation
 
 ### New Documentation Files Created
 
@@ -350,7 +350,7 @@ No backend changes needed!
 
 ---
 
-## 🎯 What Users Can Now Do
+## What Users Can Now Do
 
 1. **Choose Their AI Provider**
    - Local (Ollama) for privacy
@@ -370,7 +370,7 @@ No backend changes needed!
 
 ---
 
-## 🐛 Known Issues
+## Known Issues
 
 1. **Gemini API**
    - Uses deprecated model name
@@ -384,7 +384,7 @@ No backend changes needed!
 
 ---
 
-## 🎉 Success Criteria Met
+## Success Criteria Met
 
 - ✅ Dropdown for AI model selection
 - ✅ Dropdown for number of questions
@@ -399,7 +399,7 @@ No backend changes needed!
 
 ---
 
-## 🚀 Next Steps (Optional)
+## Next Steps (Optional)
 
 ### Potential Enhancements
 
@@ -425,7 +425,7 @@ No backend changes needed!
 
 ---
 
-## 📞 Support
+## Support
 
 ### Troubleshooting
 

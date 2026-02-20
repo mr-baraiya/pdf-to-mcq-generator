@@ -1,6 +1,6 @@
 # Frontend UI Update - Dropdown Menus
 
-## ✨ New Features Added
+## New Features Added
 
 ### 1. AI Model Selection Dropdown
 **Location:** Below the PDF upload area  
@@ -55,7 +55,7 @@
 
 ---
 
-## 📱 Complete UI Layout
+## Complete UI Layout
 
 ```
 ╔══════════════════════════════════════════════════════════╗
@@ -91,7 +91,7 @@
 
 ---
 
-## 🎨 Visual Features
+## Visual Features
 
 ### Glass Morphism Design
 - Semi-transparent backgrounds with blur effect
@@ -130,7 +130,7 @@
 
 ---
 
-## 🔄 User Flow
+## User Flow
 
 ### Step-by-Step Interaction
 
@@ -190,7 +190,7 @@
 
 ---
 
-## 💡 Smart Features
+## Smart Features
 
 ### Context-Aware Help Text
 
@@ -210,7 +210,7 @@ Gemini:    "• Best for complex documents"
 
 ---
 
-## 🎯 Technical Details
+## Technical Details
 
 ### Component Updates
 
@@ -243,7 +243,7 @@ const FileUpload = ({
 
 ---
 
-## 📊 Model Comparison
+## Model Comparison
 
 | Model    | Speed      | Cost      | Privacy   | Requirements      |
 |----------|------------|-----------|-----------|-------------------|
@@ -254,7 +254,7 @@ const FileUpload = ({
 
 ---
 
-## 🚀 Testing the UI
+## Testing the UI
 
 ### Local Development
 
@@ -305,7 +305,7 @@ npm run dev
 
 ---
 
-## 📸 Key UI Elements
+## Key UI Elements
 
 ### Dropdown Styling Classes
 
@@ -339,7 +339,7 @@ grid grid-cols-1 md:grid-cols-2 gap-4
 
 ---
 
-## ✅ Testing Checklist
+## Testing Checklist
 
 - [x] Dropdowns render correctly
 - [x] Default values set properly (Auto, 10)
@@ -356,7 +356,7 @@ grid grid-cols-1 md:grid-cols-2 gap-4
 
 ---
 
-## 🎓 For Frontend Developers
+## For Frontend Developers
 
 ### Adding New Model Options
 
@@ -390,7 +390,7 @@ No backend changes needed!
 
 ---
 
-## 📚 Related Files
+## Related Files
 
 - Frontend:
   - [src/App.jsx](../frontend/src/App.jsx) - Main app logic

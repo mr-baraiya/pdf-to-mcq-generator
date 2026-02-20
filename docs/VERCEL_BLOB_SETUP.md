@@ -4,7 +4,7 @@ This guide explains how to set up and use Vercel Blob storage with the PDF to MC
 
 ---
 
-##  What is Vercel Blob?
+## What is Vercel Blob?
 
 Vercel Blob is a serverless blob storage service that allows you to store files (like PDFs) in the cloud without managing infrastructure. It's ideal for:
 
@@ -16,7 +16,7 @@ Vercel Blob is a serverless blob storage service that allows you to store files 
 
 ---
 
-##  Setup Instructions
+## Setup Instructions
 
 ### Step 1: Create Vercel Project
 
@@ -70,7 +70,7 @@ python app.py
 
 ---
 
-##  API Changes
+## API Changes
 
 ### Updated Upload Endpoint
 
@@ -103,7 +103,7 @@ file: <PDF binary>
 
 ---
 
-##  Architecture
+## Architecture
 
 ### Before (Local Storage):
 ```
@@ -143,7 +143,7 @@ file: <PDF binary>
 
 ---
 
-##  Available Functions
+## Available Functions
 
 ### Upload PDF to Blob
 ```python
@@ -178,7 +178,7 @@ await get_blob_info(blob_url: str)
 
 ---
 
-##  Usage Examples
+## Usage Examples
 
 ### Example 1: Upload and Extract
 
@@ -192,8 +192,8 @@ file_content = await file.read()
 blob_info = await upload_pdf_to_blob(file_content, "my-document.pdf")
 
 # blob_info = {
-#   "url": "https://abc123.blob.vercelusercontent.com/my-document-xyz.pdf",
-#   "pathname": "my-document-xyz.pdf"
+# "url": "https://abc123.blob.vercelusercontent.com/my-document-xyz.pdf",
+# "pathname": "my-document-xyz.pdf"
 # }
 ```
 
@@ -225,7 +225,7 @@ text = extract_text_from_pdf(pdf_file)
 
 ---
 
-##  Frontend Updates (Optional)
+## Frontend Updates (Optional)
 
 The frontend doesn't need changes to use Vercel Blob, but you can optionally:
 
@@ -257,7 +257,7 @@ const handleFileUpload = async (file) => {
 
 ---
 
-##  Pricing & Limits
+## Pricing & Limits
 
 ### Vercel Blob Pricing:
 - **Free Tier**: First 1GB/month, then $0.50/GB
@@ -271,7 +271,7 @@ const handleFileUpload = async (file) => {
 
 ---
 
-##  Security Best Practices
+## Security Best Practices
 
 ### Token Management:
 1. **Never commit tokens to git** - Use `.env` file
@@ -288,7 +288,7 @@ const handleFileUpload = async (file) => {
 
 ---
 
-##  Troubleshooting
+## Troubleshooting
 
 ### Error: "VERCEL_BLOB_READ_WRITE_TOKEN not configured"
 
@@ -342,7 +342,7 @@ curl http://localhost:11434/api/tags
 
 ---
 
-##  Monitoring & Management
+## Monitoring & Management
 
 ### View Uploaded Blobs
 
@@ -365,7 +365,7 @@ async def cleanup_pdf(blob_url: str):
 
 ---
 
-##  Integration with Database (Advanced)
+## Integration with Database (Advanced)
 
 Add a database to store metadata:
 
@@ -400,7 +400,7 @@ async def upload_pdf(file: UploadFile, db: Session):
 
 ---
 
-##  Additional Resources
+## Additional Resources
 
 - [Vercel Blob Docs](https://vercel.com/docs/storage/vercel-blob)
 - [Vercel Blob API Reference](https://vercel.com/docs/storage/vercel-blob/api-reference)
@@ -409,7 +409,7 @@ async def upload_pdf(file: UploadFile, db: Session):
 
 ---
 
-##  Verification
+## Verification
 
 To verify Vercel Blob is working:
 
@@ -439,7 +439,7 @@ To verify Vercel Blob is working:
 
 ---
 
-##  You're All Set!
+## You're All Set!
 
 Your backend now uses Vercel Blob for secure, scalable PDF storage. The frontend works exactly the same - no changes needed!
 

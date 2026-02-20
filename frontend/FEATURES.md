@@ -1,6 +1,6 @@
 # Frontend Features
 
-## 🎨 User Interface Components
+## User Interface Components
 
 ### 1. AI Model Selection Dropdown
 
@@ -44,7 +44,7 @@ Users can select how many questions to generate:
 
 ---
 
-## 🔧 Technical Implementation
+## Technical Implementation
 
 ### State Management
 
@@ -79,7 +79,7 @@ FileUpload.jsx
 
 ---
 
-## 🎯 User Experience Flow
+## User Experience Flow
 
 1. **User uploads PDF**
    - Drag & drop or click to browse
@@ -102,7 +102,7 @@ FileUpload.jsx
 
 ---
 
-## 🎨 UI Design
+## UI Design
 
 ### Dropdown Styling
 
@@ -142,7 +142,7 @@ disabled:opacity-50
 
 ---
 
-## 🔄 Integration with Backend
+## Integration with Backend
 
 ### Environment Configuration
 
@@ -187,7 +187,7 @@ try {
 
 ---
 
-## 🚀 Development
+## Development
 
 ### Running Locally
 
@@ -209,7 +209,7 @@ Output in `dist/` directory
 
 ---
 
-## 📱 Responsive Design
+## Responsive Design
 
 The dropdowns and UI adapt to different screen sizes:
 
@@ -219,7 +219,7 @@ The dropdowns and UI adapt to different screen sizes:
 
 ---
 
-## 🎯 Future Enhancements
+## Future Enhancements
 
 Potential improvements:
 
@@ -245,7 +245,7 @@ Potential improvements:
 
 ---
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Dropdown Not Updating
 
@@ -267,7 +267,7 @@ Potential improvements:
 
 ---
 
-## 📚 Related Documentation
+## Related Documentation
 
 - [Backend API Endpoints](../backend/API_ENDPOINTS.md)
 - [Ollama Auto Install](../backend/OLLAMA_AUTO_INSTALL.md)

@@ -2,7 +2,7 @@
 
 This document explains how the API code is organized in separate files for better maintainability and understanding.
 
-##  File Organization
+## File Organization
 
 ```
 api/
@@ -13,7 +13,7 @@ api/
  handlers.py       # Event & exception handlers
 ```
 
-##  File-by-File ExplanationFile
+## File-by-File ExplanationFile
 
 ### 1. **index.py** - Main Application Entry Point
 **Purpose:** Combines all components into one working application
@@ -95,11 +95,11 @@ def create_app() -> FastAPI:
 
 **Endpoints:**
 
-####  GET `/`
+#### GET `/`
 - **Purpose:** Health check
 - **Returns:** API version info
 
-####  POST `/upload-pdf`
+#### POST `/upload-pdf`
 - **Purpose:** Upload PDF and extract text
 - **Input:** PDF file
 - **Process:**
@@ -109,7 +109,7 @@ def create_app() -> FastAPI:
   4. Return extracted text + blob URL
 - **Output:** Text, blob URL, success status
 
-####  POST `/generate-mcqs`
+#### POST `/generate-mcqs`
 - **Purpose:** Generate MCQs from text
 - **Input:** Text + number of questions
 - **Process:**
@@ -147,7 +147,7 @@ async def global_exception_handler(request, exc):
 
 ---
 
-##  How It All Works Together
+## How It All Works Together
 
 ```
 User Request
@@ -167,7 +167,7 @@ handlers.py catches any errors
 User Gets Response
 ```
 
-##  Data Flow Example
+## Data Flow Example
 
 ### Uploading a PDF:
 ```
@@ -190,7 +190,7 @@ User Gets Response
 
 ---
 
-##  Key Concepts to Explain to Your Sir
+## Key Concepts to Explain to Your Sir
 
 ### 1. **Separation of Concerns**
 Each file has ONE responsibility:
@@ -227,7 +227,7 @@ Easy to expand:
 
 ---
 
-##  Summary
+## Summary
 
 | File | Responsibility | Lines of Code |
 |------|-----------------|---------------|

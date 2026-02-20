@@ -1,6 +1,6 @@
 # Vercel Blob Integration Summary
 
-##  What's Been Updated
+## What's Been Updated
 
 ### New Files Created
 -  `backend/src/utils/blob_storage.py` - Vercel Blob utility functions
@@ -18,7 +18,7 @@
 
 ---
 
-##  Key Changes
+## Key Changes
 
 ### File Storage Flow
 
@@ -62,7 +62,7 @@
 
 ---
 
-##  New Capabilities
+## New Capabilities
 
 ### Cloud Storage Functions
 
@@ -93,7 +93,7 @@ text = extract_text_from_pdf(pdf_bytes)
 
 ---
 
-##  New Dependencies
+## New Dependencies
 
 ```
 vercel-blob==0.0.5
@@ -108,7 +108,7 @@ pip install -r requirements.txt
 
 ---
 
-##  Configuration
+## Configuration
 
 ### Environment Variables (.env)
 
@@ -124,7 +124,7 @@ Get these from:
 
 ---
 
-##  Benefits
+## Benefits
 
 | Feature | Before | After |
 |---------|--------|-------|
@@ -138,7 +138,7 @@ Get these from:
 
 ---
 
-##  Security
+## Security
 
 -  HTTPS encrypted uploads/downloads
 -  Token-based authentication
@@ -148,7 +148,7 @@ Get these from:
 
 ---
 
-##  Architecture Comparison
+## Architecture Comparison
 
 ### Local Storage
 ```
@@ -164,7 +164,7 @@ PDF Upload  FastAPI  Vercel Blob  Extract Text
 
 ---
 
-##  Migration Guide
+## Migration Guide
 
 If you have existing code:
 
@@ -194,7 +194,7 @@ text = extract_text_from_pdf(pdf_file)
 
 ---
 
-##  Recommended Next Steps
+## Recommended Next Steps
 
 ### Basic Setup (Keep it simple)
 1. Configure Vercel Blob token
@@ -216,7 +216,7 @@ text = extract_text_from_pdf(pdf_file)
 
 ---
 
-##  Example Usage
+## Example Usage
 
 ### Upload and Store
 ```python
@@ -258,7 +258,7 @@ async def delete_pdf(blob_url: str):
 
 ---
 
-##  Documentation
+## Documentation
 
 For detailed setup and usage:
 - **[VERCEL_BLOB_SETUP.md](VERCEL_BLOB_SETUP.md)** - Complete guide
@@ -268,7 +268,7 @@ For detailed setup and usage:
 
 ---
 
-##  Troubleshooting
+## Troubleshooting
 
 ### Token not working
 ```bash
@@ -301,7 +301,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 ---
 
-##  Verification
+## Verification
 
 Test Vercel Blob integration:
 

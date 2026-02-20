@@ -8,7 +8,7 @@ Production: https://your-backend.vercel.app
 
 ---
 
-## 📋 Available Endpoints
+## Available Endpoints
 
 ### 1. Health Check
 **GET** `/`
@@ -204,7 +204,7 @@ Start the Ollama service if it's installed but not running.
 
 ---
 
-## 🤖 MCQ Generation Endpoints
+## MCQ Generation Endpoints
 
 ### 7. Auto Fallback (Recommended for most users)
 **POST** `/generate-mcqs`
@@ -365,7 +365,7 @@ Uses **Google Gemini Pro** model. Best for complex documents.
 
 ---
 
-## 📊 Frontend Integration Examples
+## Frontend Integration Examples
 
 ### Example 1: Check Available Models on Page Load
 
@@ -452,7 +452,7 @@ async function uploadAndGenerate(pdfFile, model = 'auto') {
 
 ---
 
-## 🎨 Recommended UI Design
+## Recommended UI Design
 
 ### Model Selection Dropdown/Radio Buttons:
 
@@ -482,7 +482,7 @@ Choose Generation Method:
 
 ---
 
-## ⚠️ Error Handling
+## Error Handling
 
 ### Common Errors:
 
@@ -516,7 +516,7 @@ try {
 
 ---
 
-## 🔑 Environment Variables (Backend)
+## Environment Variables (Backend)
 
 Frontend developers don't need to worry about these, but they should know:
 
@@ -534,7 +534,7 @@ If any API key is missing, that model will be unavailable (shown in `/ai-status`
 
 ---
 
-## 📝 Notes for Frontend Developers
+## Notes for Frontend Developers
 
 1. **Always check `/ai-status` first** to know which models are available
 2. **Disable buttons** for unavailable models in UI
@@ -546,7 +546,7 @@ If any API key is missing, that model will be unavailable (shown in `/ai-status`
 
 ---
 
-## 🚀 Quick Start for Frontend
+## Quick Start for Frontend
 
 ```javascript
 // 1. Check available models

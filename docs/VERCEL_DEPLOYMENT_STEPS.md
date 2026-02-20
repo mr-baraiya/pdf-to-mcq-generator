@@ -1,6 +1,6 @@
 # Vercel Deployment Steps
 
-## 🔥 Recent Fixes Applied
+## Recent Fixes Applied
 
 ### Fixed: "This Serverless Function has crashed" Error
 **Problem**: FUNCTION_INVOCATION_FAILED on Vercel deployment

@@ -4,7 +4,7 @@ Run this checklist to ensure everything is properly set up.
 
 ---
 
-##  Prerequisites Check
+## Prerequisites Check
 
 - [ ] **Python** installed
   ```bash
@@ -36,7 +36,7 @@ Run this checklist to ensure everything is properly set up.
 
 ---
 
-##  Backend Setup Check
+## Backend Setup Check
 
 ```bash
 cd backend
@@ -83,7 +83,7 @@ cd backend
 
 ---
 
-##  Frontend Setup Check
+## Frontend Setup Check
 
 ```bash
 cd frontend
@@ -117,7 +117,7 @@ cd frontend
 
 ---
 
-##  Integration Check
+## Integration Check
 
 With both servers running:
 
@@ -155,7 +155,7 @@ With both servers running:
 
 ---
 
-##  Detailed Diagnostics
+## Detailed Diagnostics
 
 ### If Backend won't start:
 
@@ -250,7 +250,7 @@ With both servers running:
 
 ---
 
-##  Performance Check
+## Performance Check
 
 ### Backend Performance:
 - [ ] Health check (GET /) should respond in <100ms
@@ -269,7 +269,7 @@ With both servers running:
 
 ---
 
-##  Test With Sample Data
+## Test With Sample Data
 
 ### Sample PDF Content:
 
@@ -307,7 +307,7 @@ The system should generate questions like:
 
 ---
 
-##  Still Having Issues?
+## Still Having Issues?
 
 1. **Check logs**:
    - Backend: Look at terminal running `python app.py`
@@ -346,7 +346,7 @@ The system should generate questions like:
 
 ---
 
-##  Success Indicators
+## Success Indicators
 
 You'll know everything is working when:
 

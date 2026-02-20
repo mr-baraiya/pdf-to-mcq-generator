@@ -4,13 +4,13 @@ This guide explains how to configure the frontend to work with the Vercel server
 
 ---
 
-##  API URL Configuration
+## API URL Configuration
 
 The frontend needs to know where the API is. In local development, it's on a different port. In production (Vercel), both frontend and API are on the same domain.
 
 ---
 
-##  Solution: Use Environment Variables
+## Solution: Use Environment Variables
 
 ### Step 1: Update `frontend/.env`
 
@@ -96,7 +96,7 @@ export default App;
 
 ---
 
-##  Alternative: Detect Environment
+## Alternative: Detect Environment
 
 Instead of environment files, detect automatically:
 
@@ -117,7 +117,7 @@ const API_URL = getAPIUrl();
 
 ---
 
-##  Vite Configuration Update
+## Vite Configuration Update
 
 Make sure `frontend/vite.config.js` has proxy for local development:
 
@@ -147,7 +147,7 @@ export default defineConfig({
 
 ---
 
-##  Example: Complete Updated App.jsx
+## Example: Complete Updated App.jsx
 
 ```javascript
 import React, { useState } from 'react';
@@ -273,7 +273,7 @@ export default App;
 
 ---
 
-##  Testing Local & Production
+## Testing Local & Production
 
 ### Local Development
 
@@ -299,7 +299,7 @@ npm run build
 
 ---
 
-##  Browser DevTools Verification
+## Browser DevTools Verification
 
 ### Check Network Requests
 
@@ -319,7 +319,7 @@ console.log(import.meta.env.VITE_API_URL) // Shows configured URL
 
 ---
 
-##  Troubleshooting
+## Troubleshooting
 
 ### "Cannot reach API" locally
 
@@ -367,7 +367,7 @@ allow_origins=[
 
 ---
 
-##  Summary
+## Summary
 
 | Aspect | Local | Vercel |
 |--------|-------|--------|
@@ -379,7 +379,7 @@ allow_origins=[
 
 ---
 
-##  You're Ready!
+## You're Ready!
 
 Your frontend is now configured to work both locally and on Vercel production.
 

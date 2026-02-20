@@ -4,13 +4,13 @@ This guide explains how to properly configure credentials and environment variab
 
 ---
 
-##  Overview
+## Overview
 
 The application uses a `.env` file to store sensitive credentials and configuration. This keeps secrets out of your code and makes the app secure.
 
 ---
 
-##  Quick Setup
+## Quick Setup
 
 ### Step 1: Create `.env` File
 
@@ -52,7 +52,7 @@ On startup, the app will validate your credentials and show:
 
 ---
 
-##  Detailed Configuration
+## Detailed Configuration
 
 ### Ollama Configuration
 
@@ -121,7 +121,7 @@ VERCEL_BLOB_STORE_ID=your_store_id_here
 
 ---
 
-##  Validation & Verification
+## Validation & Verification
 
 ### On Startup
 
@@ -162,16 +162,16 @@ print(os.getenv("VERCEL_BLOB_STORE_ID"))  # Should print store ID
 
 ---
 
-##  Security Best Practices
+## Security Best Practices
 
-### Do's 
+### Do's
 -  Keep `.env` file in `.gitignore` (already configured)
 -  Use strong, unique tokens
 -  Rotate tokens periodically in Vercel dashboard
 -  Never share `.env` file with others
 -  Use `.env.example` as template only
 
-### Don'ts 
+### Don'ts
 -  Commit `.env` to git repository
 -  Share credentials via email or chat
 -  Use same token everywhere
@@ -198,7 +198,7 @@ git status
 
 ---
 
-##  Troubleshooting
+## Troubleshooting
 
 ### Error: "VERCEL_BLOB_READ_WRITE_TOKEN not configured"
 
@@ -240,7 +240,7 @@ ENVIRONMENT=production python app.py
 
 ---
 
-##  Environment-Specific Configuration
+## Environment-Specific Configuration
 
 ### Development (.env.development)
 
@@ -286,7 +286,7 @@ load_dotenv(env_file)
 
 ---
 
-##  Managing Multiple Instances
+## Managing Multiple Instances
 
 If running multiple instances:
 
@@ -313,7 +313,7 @@ ENVIRONMENT=multi python app.py
 
 ---
 
-##  Updating Credentials
+## Updating Credentials
 
 ### Rotate Vercel Blob Token
 
@@ -340,7 +340,7 @@ cp backend/.env.backup backend/.env
 
 ---
 
-##  Configuration Validation Script
+## Configuration Validation Script
 
 Create `backend/validate_config.py`:
 
@@ -404,7 +404,7 @@ python validate_config.py
 
 ---
 
-##  Docker Configuration
+## Docker Configuration
 
 For Docker deployments:
 
@@ -432,7 +432,7 @@ docker run --secret vercel_blob_token \
 
 ---
 
-##  Related Documentation
+## Related Documentation
 
 - [Vercel Blob Setup](../docs/VERCEL_BLOB_SETUP.md)
 - [Environment Variables in Python](https://12factor.net/config)
@@ -441,7 +441,7 @@ docker run --secret vercel_blob_token \
 
 ---
 
-##  Summary
+## Summary
 
 **Key Points:**
 1.  Create `backend/.env` from `.env.example`

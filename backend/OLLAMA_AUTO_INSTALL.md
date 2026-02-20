@@ -2,7 +2,7 @@
 
 Auto-installation and management features for Ollama integration.
 
-## 🎯 Overview
+## Overview
 
 The backend now automatically:
 1. **Detects** if Ollama is installed
@@ -10,7 +10,7 @@ The backend now automatically:
 3. **Auto-installs** Ollama on Linux systems
 4. **Starts** Ollama service when needed
 
-## 🚀 New API Endpoints
+## New API Endpoints
 
 ### 1. GET `/ollama-status`
 Check Ollama installation status and get OS-specific setup instructions.
@@ -98,7 +98,7 @@ curl -X POST http://localhost:8000/ollama-start
 }
 ```
 
-## 🔄 Startup Detection
+## Startup Detection
 
 The backend automatically checks Ollama status on startup:
 
@@ -114,7 +114,7 @@ INFO:     Application startup complete.
 - ⚠️ **Ollama not installed (Linux)** - Auto-install available
 - ⚠️ **Ollama not installed (macOS/Windows)** - Manual install required
 
-## 📱 Frontend Integration
+## Frontend Integration
 
 ### Check and Install Flow
 
@@ -208,7 +208,7 @@ async function startOllama() {
 ╚════════════════════════════════════════╝
 ```
 
-## 🔧 Technical Details
+## Technical Details
 
 ### Installation Process
 
@@ -240,7 +240,7 @@ async function startOllama() {
 - Tests service with GET request to `/api/tags`
 - Returns installation state and running state
 
-## ⚠️ Limitations
+## Limitations
 
 1. **Auto-install only on Linux** - macOS/Windows require manual installation
 2. **Requires internet** - Downloads from ollama.com
@@ -248,7 +248,7 @@ async function startOllama() {
 4. **System permissions** - May require sudo on some systems
 5. **Model download** - Users still need to `ollama pull llama3.2` after install
 
-## 🎯 Best Practices
+## Best Practices
 
 ### For Frontend Developers:
 
@@ -265,7 +265,7 @@ async function startOllama() {
 3. **Pull a model after install** - Run `ollama pull llama3.2`
 4. **Keep Ollama running** - Service needs to stay active
 
-## 📊 Example Workflow
+## Example Workflow
 
 ```javascript
 // Complete setup flow
@@ -316,7 +316,7 @@ async function setupOllama() {
 }
 ```
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 **Installation fails:**
 - Check internet connection
@@ -332,7 +332,7 @@ async function setupOllama() {
 - Need to pull model: `ollama pull llama3.2`
 - Check available models: `ollama list`
 
-## 📚 Related Documentation
+## Related Documentation
 
 - [API_ENDPOINTS.md](./API_ENDPOINTS.md) - All API endpoints
 - [OLLAMA_SETUP.md](./docs/OLLAMA_SETUP.md) - Manual Ollama setup

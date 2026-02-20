@@ -1,6 +1,6 @@
-#  Quick Start Checklist
+# Quick Start Checklist
 
-##  What's Been Created
+## What's Been Created
 
 ### Backend (FastAPI)
 -  `backend/app.py` - FastAPI application with 3 endpoints
@@ -29,7 +29,7 @@
 
 ---
 
-##  Optional: Vercel Blob Integration
+## Optional: Vercel Blob Integration
 
 To store PDFs in cloud storage instead of locally:
 
@@ -47,7 +47,7 @@ See [docs/VERCEL_BLOB_SETUP.md](docs/VERCEL_BLOB_SETUP.md) for detailed Blob set
 
 ---
 
-##  Getting Started (3 Steps)
+## Getting Started (3 Steps)
 
 ### Step 1: Prepare Ollama
 ```bash
@@ -81,7 +81,7 @@ npm run dev
 
 ---
 
-##  Next Steps
+## Next Steps
 
 ### To Test the Application:
 1. Open http://localhost:3000 in browser
@@ -112,7 +112,7 @@ npm run dev
 
 ---
 
-##  Troubleshooting
+## Troubleshooting
 
 ### Backend won't start
 - Make sure Ollama is running: `http://localhost:11434`
@@ -137,7 +137,7 @@ ollama list  # See installed models
 
 ---
 
-##  Architecture Overview
+## Architecture Overview
 
 ```
 
@@ -174,7 +174,7 @@ ollama list  # See installed models
 
 ---
 
-##  What Each Component Does
+## What Each Component Does
 
 | Component | Purpose | Technology |
 |-----------|---------|-----------|
@@ -188,7 +188,7 @@ ollama list  # See installed models
 
 ---
 
-##  Key Features Implemented
+## Key Features Implemented
 
  **Upload PDF** - Drag and drop or click to select
  **Extract Text** - Automatic text extraction
@@ -203,7 +203,7 @@ ollama list  # See installed models
 
 ---
 
-##  Workflow
+## Workflow
 
 1. User uploads PDF
    
@@ -229,7 +229,7 @@ ollama list  # See installed models
 
 ---
 
-##  Tips
+## Tips
 
 - **First run may be slow** - Ollama loads the model on first request
 - **Use Mistral** - It's smaller (~7B) and faster than Llama
@@ -240,7 +240,7 @@ ollama list  # See installed models
 
 ---
 
-##  Need Help?
+## Need Help?
 
 -  Check documentation in `docs/` folder
 -  Read component code - it's well-commented

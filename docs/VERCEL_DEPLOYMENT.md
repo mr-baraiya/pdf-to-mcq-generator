@@ -4,7 +4,7 @@ This guide explains the recommended project structure for deploying to Vercel wi
 
 ---
 
-##  Project Structure for Vercel
+## Project Structure for Vercel
 
 ```
 pdf-to-mcq-generator/
@@ -51,7 +51,7 @@ pdf-to-mcq-generator/
 
 ---
 
-##  How Vercel Deployment Works
+## How Vercel Deployment Works
 
 ### Architecture
 
@@ -85,7 +85,7 @@ User Browser (https://yourdomain.com)
 
 ---
 
-##  Configuration Files
+## Configuration Files
 
 ### vercel.json
 
@@ -141,7 +141,7 @@ aiohttp==3.9.1
 
 ---
 
-##  Setup Steps
+## Setup Steps
 
 ### Step 1: Prepare Local Structure
 
@@ -203,7 +203,7 @@ On Vercel Dashboard:
 
 ---
 
-##  API Integration in Frontend
+## API Integration in Frontend
 
 ### Update API URL
 
@@ -245,7 +245,7 @@ axios.post(`${API_URL}/upload-pdf`, formData)
 
 ---
 
-##  Environment Variables on Vercel
+## Environment Variables on Vercel
 
 ### Set on Vercel Dashboard
 
@@ -273,7 +273,7 @@ python api/index.py
 
 ---
 
-##  Deployment Checklist
+## Deployment Checklist
 
 - [ ] Project structure matches above
 - [ ] `api/index.py` exists and imports from `backend/`
@@ -286,7 +286,7 @@ python api/index.py
 
 ---
 
-##  Test Deployment
+## Test Deployment
 
 After deploying to Vercel:
 
@@ -319,7 +319,7 @@ curl -X POST https://your-project.vercel.app/api/upload-pdf \
 
 ---
 
-##  Update Deployment
+## Update Deployment
 
 ### Auto-deployment on Git Push
 
@@ -336,7 +336,7 @@ vercel --prod
 
 ---
 
-##  Monitoring
+## Monitoring
 
 ### Check Logs
 
@@ -353,7 +353,7 @@ Vercel Dashboard:
 
 ---
 
-##  Troubleshooting
+## Troubleshooting
 
 ### Frontend not showing
 - Check `frontend/dist/` exists
@@ -380,7 +380,7 @@ Vercel Dashboard:
 
 ---
 
-##  Local Development
+## Local Development
 
 Run both locally before deploying:
 
@@ -399,7 +399,7 @@ Open `http://localhost:3000`
 
 ---
 
-##  Next Steps
+## Next Steps
 
 1. **Restructure** project to match directory layout
 2. **Review** `api/index.py` for your endpoints
@@ -411,7 +411,7 @@ Open `http://localhost:3000`
 
 ---
 
-##  Documentation
+## Documentation
 
 - [Vercel FastAPI Docs](https://vercel.com/docs/functions/quickstart/python)
 - [Vercel Environment Variables](https://vercel.com/docs/projects/environment-variables)
@@ -420,7 +420,7 @@ Open `http://localhost:3000`
 
 ---
 
-##  Benefits of This Structure
+## Benefits of This Structure
 
 | Benefit | Details |
 |---------|---------|
