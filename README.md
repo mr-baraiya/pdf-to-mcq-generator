@@ -67,21 +67,28 @@ A smart web application that automatically generates Multiple Choice Questions (
 
 ```
 pdf-to-mcq-generator/
-├── api/                            # Backend API
-│   ├── index.py                    # Main Vercel serverless entry
-│   ├── routes.py                   # API endpoints
-│   ├── handlers.py                 # Request handlers
-│   ├── models.py                   # Data models
-│   ├── config.py                   # Configuration
-│   ├── llm/
-│   │   ├── __init__.py
-│   │   └── mcq_generator.py        # AI MCQ generation logic
-│   ├── pdf/
-│   │   ├── __init__.py
-│   │   └── extractor.py            # PDF text extraction
-│   └── utils/
-│       ├── __init__.py
-│       └── blob_storage.py         # Vercel Blob integration
+├── backend/                        # Backend API
+│   ├── api/                        # Main API package
+│   │   ├── index.py                # Main FastAPI application
+│   │   ├── routes.py               # API endpoints
+│   │   ├── handlers.py             # Request handlers
+│   │   ├── models.py               # Data models
+│   │   ├── config.py               # Configuration
+│   │   ├── llm/
+│   │   │   ├── __init__.py
+│   │   │   └── mcq_generator.py    # AI MCQ generation logic
+│   │   ├── pdf/
+│   │   │   ├── __init__.py
+│   │   │   └── extractor.py        # PDF text extraction
+│   │   └── utils/
+│   │       ├── __init__.py
+│   │       └── blob_storage.py     # Vercel Blob integration
+│   ├── requirements.txt            # Python dependencies
+│   ├── vercel.json                 # Vercel deployment config
+│   ├── .env                        # Backend environment variables
+│   ├── .env.example                # Backend env template
+│   ├── package.json                # Backend package metadata
+│   └── README.md                   # Backend documentation
 │
 ├── frontend/                       # React Frontend
 │   ├── src/
@@ -137,8 +144,16 @@ cd pdf-to-mcq-generator
 
 ### 2. Environment Setup
 
-Create a `.env` file in the root directory:
+**Backend Environment Variables:**
 
+Create a `.env` file in the `backend/` directory:
+
+```bash
+cd backend
+cp .env.example .env
+```
+
+Edit `backend/.env`:
 ```bash
 # Local Ollama (Priority 1 - Optional but recommended)
 OLLAMA_HOST=http://localhost:11434
@@ -148,8 +163,27 @@ OLLAMA_MODEL=llama3.2
 GROQ_API_KEY=your_groq_api_key_here
 GEMINI_API_KEY=your_gemini_api_key_here
 
+# Frontend URL (for CORS)
+FRONTEND_URL=http://localhost:3000
+
 # Vercel Blob Storage (optional for local)
-BLOB_READ_WRITE_TOKEN=your_vercel_blob_token_here
+VERCEL_BLOB_READ_WRITE_TOKEN=your_vercel_blob_token_here
+VERCEL_BLOB_STORE_ID=your_store_id_here
+```
+
+**Frontend Environment Variables:**
+
+Create a `.env` file in the `frontend/` directory:
+
+```bash
+cd frontend
+cp .env.example .env
+```
+
+Edit `frontend/.env`:
+```bash
+# Backend API URL
+VITE_API_URL=http://localhost:8000
 ```
 
 **Setup Options:**
@@ -172,7 +206,9 @@ Get API keys:
 
 **Backend:**
 ```bash
+cd backend
 pip install -r requirements.txt
+cd ..
 ```
 
 **Frontend:**
@@ -182,20 +218,24 @@ npm install
 cd ..
 ```
 
+Or use the root package.json:
+```bash
+npm run install
+```
+
 ### 4. Run Development Servers
 
 **Option A: Using npm scripts (Recommended)**
 ```bash
-npm run build          # Build frontend
-python -m http.server 3000 -d frontend/dist  # Serve frontend
-vercel dev            # Run backend API
+npm run dev          # Runs both backend and frontend concurrently
 ```
 
 **Option B: Separate Terminals**
 
 Terminal 1 - Backend (port 8000):
 ```bash
-python api/index.py
+cd backend
+python -m uvicorn api.index:app --reload --host 0.0.0.0 --port 8000
 ```
 
 Terminal 2 - Frontend (port 3000):

@@ -29,10 +29,10 @@ def check_ollama_available():
         response = requests.get(f"{ollama_url}/api/tags", timeout=2)
         _ollama_available = response.status_code == 200
         if _ollama_available:
-            log.info(f"✅ Local Ollama detected at {ollama_url}")
+            log.info(f"Local Ollama detected at {ollama_url}")
         return _ollama_available
     except Exception as e:
-        log.info(f"ℹ️ Local Ollama not available: {str(e)}")
+        log.info(f"ℹLocal Ollama not available: {str(e)}")
         _ollama_available = False
         return False
 
@@ -85,10 +85,10 @@ def generate_mcqs(txt, num=5):
     # Priority 1: Try local Ollama first
     if check_ollama_available():
         try:
-            log.info("🏠 Using Local Ollama (Priority)")
+            log.info("Using Local Ollama (Priority)")
             return generate_with_ollama(txt, num)
         except Exception as e:
-            log.warning(f"⚠️ Ollama failed: {str(e)}, falling back to cloud APIs")
+            log.warning(f"Ollama failed: {str(e)}, falling back to cloud APIs")
     
     # Priority 2: Fallback to Groq/Gemini
     text_size = len(txt.encode('utf-8'))
@@ -107,7 +107,7 @@ def generate_with_ollama(txt, num):
     ollama_url = os.getenv("OLLAMA_HOST", "http://localhost:11434")
     ollama_model = os.getenv("OLLAMA_MODEL", "llama3.2")
     
-    log.info(f"🏠 Generating {num} MCQs with Ollama ({ollama_model})")
+    log.info(f"Generating {num} MCQs with Ollama ({ollama_model})")
     
     try:
         prompt = make_prompt(txt, num)
@@ -137,11 +137,11 @@ def generate_with_ollama(txt, num):
         if not qs:
             raise Exception("No questions generated")
         
-        log.info(f"✅ Ollama: Generated {len(qs)} questions")
+        log.info(f"Ollama: Generated {len(qs)} questions")
         return qs
         
     except Exception as e:
-        log.error(f"❌ Ollama error: {str(e)}")
+        log.error(f"Ollama error: {str(e)}")
         raise
 
 
@@ -152,7 +152,7 @@ def generate_with_groq(txt, num):
     if not api_key:
         raise ValueError("GROQ_API_KEY not found in .env file")
     
-    log.info(f"🚀 Generating {num} MCQs with Groq (Llama 3.3)")
+    log.info(f"Generating {num} MCQs with Groq (Llama 3.3)")
     
     try:
         client = Groq(api_key=api_key)
@@ -177,14 +177,12 @@ def generate_with_groq(txt, num):
         resp = res.choices[0].message.content
         qs = parse_response(resp)
         
-        log.info(f"✅ Groq: Generated {len(qs)} questions")
+        log.info(f"Groq: Generated {len(qs)} questions")
         return qs
         
     except Exception as e:
-        log.error(f"❌ Groq error: {str(e)}")
-        # Fallback to Gemini if Groq fails
-        log.info("Falling back to Gemini...")
-        return generate_with_gemini(txt, num)
+        log.error(f"Groq error: {str(e)}")
+        raise
 
 
 def generate_with_gemini(txt, num):
@@ -194,10 +192,11 @@ def generate_with_gemini(txt, num):
     if not api_key:
         raise ValueError("GEMINI_API_KEY not found in .env file")
     
-    log.info(f"🧠 Generating {num} MCQs with Gemini")
+    log.info(f"Generating {num} MCQs with Gemini")
     
     try:
         genai.configure(api_key=api_key)
+        # Using gemini-pro without models/ prefix
         model = genai.GenerativeModel('gemini-pro')
         
         prompt = make_prompt(txt, num)
@@ -207,11 +206,11 @@ def generate_with_gemini(txt, num):
         
         qs = parse_response(resp)
         
-        log.info(f"✅ Gemini: Generated {len(qs)} questions")
+        log.info(f"Gemini: Generated {len(qs)} questions")
         return qs
         
     except Exception as e:
-        log.error(f"❌ Gemini error: {str(e)}")
+        log.error(f"Gemini error: {str(e)}")
         raise
 
 

@@ -1,8 +1,8 @@
 # PDF to MCQ Generator API
 
-from api.config import create_app
-from api.handlers import setup_event_handlers, setup_exception_handlers
-from api.routes import setup_routes
+from config import create_app
+from handlers import setup_event_handlers, setup_exception_handlers
+from routes import setup_routes
 
 # Create app
 app = create_app()
