@@ -11,6 +11,8 @@ import Features from './components/Features';
 import AnimatedBackground from './components/AnimatedBackground';
 import { AlertCircle } from 'lucide-react';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
 function App() {
   const [mcqs, setMcqs] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -32,7 +34,7 @@ function App() {
       formData.append('file', file);
       
       setLoadingStage('extracting');
-      const response = await axios.post('/api/upload-pdf', formData, {
+      const response = await axios.post(`${API_BASE_URL}/upload-pdf`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       
@@ -66,12 +68,12 @@ function App() {
     
     try {
       // Select the appropriate endpoint based on model
-      let endpoint = '/api/generate-mcqs'; // default auto fallback
-      if (model === 'ollama') endpoint = '/api/generate-mcqs-ollama';
-      else if (model === 'groq') endpoint = '/api/generate-mcqs-groq';
-      else if (model === 'gemini') endpoint = '/api/generate-mcqs-gemini';
+      let endpoint = '/generate-mcqs'; // default auto fallback
+      if (model === 'ollama') endpoint = '/generate-mcqs-ollama';
+      else if (model === 'groq') endpoint = '/generate-mcqs-groq';
+      else if (model === 'gemini') endpoint = '/generate-mcqs-gemini';
       
-      const response = await axios.post(endpoint, {
+      const response = await axios.post(`${API_BASE_URL}${endpoint}`, {
         text: text,
         num_questions: numQs
       });
