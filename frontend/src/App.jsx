@@ -41,7 +41,15 @@ function App() {
       // Auto-generate MCQs after upload using selected settings
       await handleGenerateMCQs(numQuestions, response.data.text, selectedModel);
     } catch (err) {
-      setError('Error uploading file: ' + (err.response?.data?.detail || err.message));
+      let errorMessage = 'Error uploading file: ';
+      
+      if (err.response?.status === 413) {
+        errorMessage = 'File too large! Maximum size is 5MB. Please upload a smaller PDF file.';
+      } else {
+        errorMessage += err.response?.data?.detail || err.message;
+      }
+      
+      setError(errorMessage);
       setLoading(false);
     }
   };
