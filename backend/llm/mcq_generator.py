@@ -118,19 +118,23 @@ def generate_with_ollama(txt, num):
                 "model": ollama_model,
                 "prompt": prompt,
                 "stream": False,
+                "format": "json",
                 "options": {
                     "temperature": 0.7,
-                    "num_predict": 2000
+                    "num_predict": 4000
                 }
             },
-            timeout=60
+            timeout=120
         )
         
         if response.status_code != 200:
-            raise Exception(f"Ollama API error: {response.status_code}")
+            raise Exception(f"Ollama API error: {response.status_code} - {response.text}")
         
         result = response.json()
         resp = result.get("response", "")
+        
+        if not resp:
+             log.warning(f"Ollama returned empty response. Full result: {result}")
         
         qs = parse_response(resp)
         
@@ -196,8 +200,8 @@ def generate_with_gemini(txt, num):
     
     try:
         genai.configure(api_key=api_key)
-        # Using gemini-1.5-flash (gemini-pro is deprecated)
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        # Using gemini-2.0-flash (gemini-1.5-flash is deprecated/404)
+        model = genai.GenerativeModel('gemini-2.0-flash')
         
         prompt = make_prompt(txt, num)
         
