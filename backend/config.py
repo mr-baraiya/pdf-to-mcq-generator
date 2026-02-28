@@ -34,6 +34,7 @@ def create_app():
         )
         
         # Allow frontend to call this backend
+        # CORS: Allow EVERYTHING for development to fix issues
         app.add_middleware(
             CORSMiddleware,
             allow_origins=["*"],

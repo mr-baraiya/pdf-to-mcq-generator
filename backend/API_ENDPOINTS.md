@@ -71,7 +71,7 @@ Check which AI models are available and configured.
   },
   "gemini": {
     "available": true,
-    "model": "gemini-pro",
+    "model": "gemini-1.5-flash",
     "description": "Google AI - Advanced understanding"
   },
   "recommended": "ollama"

@@ -191,7 +191,7 @@ def setup_routes(app):
                 },
                 "gemini": {
                     "available": gemini_available,
-                    "model": "gemini-1.5-flash-8b",
+                    "model": "gemini-1.5-flash",
                     "description": "Google AI - Advanced understanding"
                 },
                 "recommended": "ollama" if ollama_available else "groq"

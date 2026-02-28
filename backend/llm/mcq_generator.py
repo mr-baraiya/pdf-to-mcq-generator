@@ -200,8 +200,8 @@ def generate_with_gemini(txt, num):
     
     try:
         genai.configure(api_key=api_key)
-        # Using gemini-pro (stable version)
-        model = genai.GenerativeModel('gemini-pro')
+        # Using gemini-1.5-flash (stable version)
+        model = genai.GenerativeModel('gemini-1.5-flash')
         
         prompt = make_prompt(txt, num)
         
