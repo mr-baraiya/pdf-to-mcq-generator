@@ -6,6 +6,7 @@ import logging
 from fastapi import FastAPI, UploadFile, File, HTTPException
 
 from pdf.extractor import extract_text_from_pdf
+from pdf.pptx_extractor import extract_text_from_pptx
 from llm.mcq_generator import (
     generate_mcqs, 
     generate_with_ollama, 
@@ -35,13 +36,17 @@ def setup_routes(app):
         }
     
     
-    # Upload PDF and extract text
+    # Upload PDF/PPTX and extract text
     @app.post("/upload-pdf")
     async def upload_pdf(file: UploadFile = File(...)):
         try:
-            # Check if PDF
-            if file.content_type != "application/pdf":
-                raise HTTPException(status_code=400, detail="Upload PDF only")
+            # Check if PDF or PPTX
+            mime_types = [
+                "application/pdf",
+                "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+            ]
+            if file.content_type not in mime_types and not file.filename.endswith((".pdf", ".pptx")):
+                raise HTTPException(status_code=400, detail="Upload PDF or PPTX only")
             
             # Read file
             content = await file.read()
@@ -53,10 +58,13 @@ def setup_routes(app):
             if not blob:
                 raise HTTPException(status_code=500, detail="Upload failed")
             
-            # Extract text from PDF
+            # Extract text
             try:
-                pdf = io.BytesIO(content)
-                text = extract_text_from_pdf(pdf)
+                file_stream = io.BytesIO(content)
+                if file.filename.lower().endswith(".pptx"):
+                    text = extract_text_from_pptx(file_stream)
+                else:
+                    text = extract_text_from_pdf(file_stream)
                 log.info(f"Extracted {len(text)} chars")
             except Exception as e:
                 # Delete from cloud if extraction fails
