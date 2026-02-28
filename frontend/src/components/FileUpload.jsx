@@ -1,6 +1,6 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Upload, FileText, X, CheckCircle, Sparkles, Zap, Brain, ChevronDown } from 'lucide-react';
+import { Upload, FileText, X, CheckCircle, Sparkles, Zap, Brain, ChevronDown, Rocket, Laptop, Flame, Gem } from 'lucide-react';
 
 const FileUpload = ({ 
   onFileSelect, 
@@ -12,6 +12,29 @@ const FileUpload = ({
 }) => {
   const [dragActive, setDragActive] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [modelDropdownOpen, setModelDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  const modelOptions = [
+    { value: 'auto', label: 'Auto (Recommended)', subtitle: 'Smart Fallback', icon: Rocket, color: 'text-indigo-400' },
+    { value: 'ollama', label: 'Ollama', subtitle: 'Local & Free', icon: Laptop, color: 'text-blue-400' },
+    { value: 'groq', label: 'Groq', subtitle: 'Fast Cloud', icon: Flame, color: 'text-orange-400' },
+    { value: 'gemini', label: 'Gemini', subtitle: 'Advanced AI', icon: Gem, color: 'text-purple-400' },
+  ];
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setModelDropdownOpen(false);
+      }
+    };
+
+    if (modelDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [modelDropdownOpen]);
 
   const handleDrag = useCallback((e) => {
     e.preventDefault();
@@ -196,32 +219,56 @@ const FileUpload = ({
               <label className="block text-sm font-medium text-gray-300 mb-2">
                 AI Model
               </label>
-              <div className="relative">
-                <select
-                  value={selectedModel}
-                  onChange={(e) => onModelChange(e.target.value)}
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  type="button"
+                  onClick={() => !loading && setModelDropdownOpen(!modelDropdownOpen)}
                   disabled={loading}
-                  className="w-full appearance-none glass rounded-xl px-4 py-3 pr-10 
+                  className="w-full glass rounded-xl px-4 py-3 pl-11 pr-10 
                     border border-white/10 text-white bg-white/5
                     hover:border-indigo-400/50 hover:bg-white/10
                     focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent
                     disabled:opacity-50 disabled:cursor-not-allowed
-                    transition-all duration-200 cursor-pointer"
+                    transition-all duration-200 cursor-pointer text-left
+                    flex items-center justify-between"
                 >
-                  <option value="auto" className="bg-gray-900 text-white">
-                    ✨ Auto (Recommended) - Smart Fallback
-                  </option>
-                  <option value="ollama" className="bg-gray-900 text-white">
-                    🏠 Ollama - Local & Free
-                  </option>
-                  <option value="groq" className="bg-gray-900 text-white">
-                    ⚡ Groq - Fast Cloud
-                  </option>
-                  <option value="gemini" className="bg-gray-900 text-white">
-                    🧠 Gemini - Advanced AI
-                  </option>
-                </select>
-                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                  <span className="flex items-center">
+                    {modelOptions.find(opt => opt.value === selectedModel)?.label} - {modelOptions.find(opt => opt.value === selectedModel)?.subtitle}
+                  </span>
+                </button>
+                {(() => {
+                  const selectedOption = modelOptions.find(opt => opt.value === selectedModel);
+                  const IconComponent = selectedOption?.icon;
+                  return IconComponent && <IconComponent className={`absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 ${selectedOption.color} pointer-events-none`} />;
+                })()}
+                <ChevronDown className={`absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none transition-transform ${modelDropdownOpen ? 'rotate-180' : ''}`} />
+                
+                {/* Custom Dropdown Menu */}
+                {modelDropdownOpen && (
+                  <div className="absolute z-50 mt-2 w-full glass rounded-xl border border-white/10 bg-gray-900 overflow-hidden shadow-xl">
+                    {modelOptions.map((option) => {
+                      const IconComponent = option.icon;
+                      return (
+                        <button
+                          key={option.value}
+                          type="button"
+                          onClick={() => {
+                            onModelChange(option.value);
+                            setModelDropdownOpen(false);
+                          }}
+                          className={`w-full px-4 py-3 pl-11 text-left hover:bg-white/10 transition-colors flex items-center
+                            ${selectedModel === option.value ? 'bg-white/5' : ''}`}
+                        >
+                          <IconComponent className={`absolute left-3 w-5 h-5 ${option.color}`} />
+                          <div>
+                            <div className="text-white font-medium">{option.label}</div>
+                            <div className="text-gray-400 text-xs">{option.subtitle}</div>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
               <p className="mt-2 text-xs text-gray-500">
                 {selectedModel === 'auto' && '• Tries Ollama → Groq → Gemini'}

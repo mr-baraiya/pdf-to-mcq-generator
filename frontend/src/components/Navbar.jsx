@@ -23,14 +23,14 @@ const Navbar = ({ onLogoClick }) => {
               <img 
                 src="/assets/p2m-logo.png" 
                 alt="PDF2MCQ Logo" 
-                className="w-10 h-10 object-contain"
+                className="w-14 h-14 object-contain border-2 border-indigo-500 rounded-lg p-1"
                 onError={(e) => {
                   e.target.style.display = 'none';
                   e.target.nextSibling.style.display = 'block';
                 }}
               />
               <div className="hidden">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl">
+                <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-2xl border-2 border-indigo-400">
                   P2M
                 </div>
               </div>
