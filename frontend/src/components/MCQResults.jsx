@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
-import { CheckCircle, Download, RefreshCw, ArrowLeft, Pen } from 'lucide-react';
+import { CheckCircle, Download, RefreshCw, ArrowLeft } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 
-const MCQResults = ({ mcqs, onGenerateMore, onReset, onAttemptQuiz }) => {
+const MCQResults = ({ mcqs, onGenerateMore, onReset }) => {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -118,20 +118,7 @@ const MCQResults = ({ mcqs, onGenerateMore, onReset, onAttemptQuiz }) => {
             {mcqs.length} {mcqs.length === 1 ? 'question' : 'questions'} with answers shown
           </p>
 
-          {/* Primary Action - Attempt Quiz Button */}
-          {onAttemptQuiz && (
-            <motion.button
-              onClick={onAttemptQuiz}
-              className="mb-6 px-8 py-4 rounded-xl bg-gradient-to-r from-purple-500 to-pink-600 text-white font-semibold flex items-center justify-center space-x-2 mx-auto hover:shadow-lg hover:shadow-purple-500/50 transition-all"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Pen className="w-5 h-5" />
-              <span>Re-attempt Quiz</span>
-            </motion.button>
-          )}
-
-          {/* Secondary & Tertiary Actions */}
+          {/* Action Buttons */}
           <div className="flex flex-wrap items-center justify-center gap-4">
             {/* Secondary: Download PDF */}
             <motion.button
@@ -244,20 +231,7 @@ const MCQResults = ({ mcqs, onGenerateMore, onReset, onAttemptQuiz }) => {
           transition={{ delay: 0.5 }}
           className="mt-8 sm:mt-12 text-center px-4"
         >
-          {/* Primary Action - Attempt Quiz Button */}
-          {onAttemptQuiz && (
-            <motion.button
-              onClick={onAttemptQuiz}
-              className="mb-4 sm:mb-6 w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-xl bg-gradient-to-r from-purple-500 to-pink-600 text-white font-semibold flex items-center justify-center space-x-2 mx-auto hover:shadow-lg hover:shadow-purple-500/50 transition-all text-sm sm:text-base"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Pen className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span>Re-attempt Quiz</span>
-            </motion.button>
-          )}
-
-          {/* Secondary & Tertiary Actions */}
+          {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 sm:gap-4">
             {/* Secondary: Download PDF */}
             <motion.button

@@ -6,7 +6,6 @@ import Hero from './components/Hero';
 import FileUpload from './components/FileUpload';
 import LoadingAnimation from './components/LoadingAnimation';
 import MCQResults from './components/MCQResults';
-import MCQDisplay from './components/MCQDisplay';
 import Features from './components/Features';
 import AnimatedBackground from './components/AnimatedBackground';
 import { AlertCircle } from 'lucide-react';
@@ -20,8 +19,6 @@ function App() {
   const [error, setError] = useState('');
   const [extractedText, setExtractedText] = useState('');
   const [showUpload, setShowUpload] = useState(false);
-  const [viewMode, setViewMode] = useState('results'); // 'results' or 'attempt'
-  const [selectedModel, setSelectedModel] = useState('auto'); // 'auto', 'ollama', 'groq', 'gemini'
   const [numQuestions, setNumQuestions] = useState(10); // Number of questions to generate
 
   const handleFileUpload = async (file) => {
@@ -34,14 +31,14 @@ function App() {
       formData.append('file', file);
       
       setLoadingStage('extracting');
-      const response = await axios.post(`${API_BASE_URL}/upload-pdf`, formData, {
+      const response = await axios.post(`${API_BASE_URL}/upload-file`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       
       setExtractedText(response.data.text);
       
       // Auto-generate MCQs after upload using selected settings
-      await handleGenerateMCQs(numQuestions, response.data.text, selectedModel);
+      await handleGenerateMCQs(numQuestions, response.data.text);
     } catch (err) {
       let errorMessage = 'Error uploading file: ';
       
@@ -56,7 +53,7 @@ function App() {
     }
   };
 
-  const handleGenerateMCQs = async (numQs = numQuestions, text = extractedText, model = selectedModel) => {
+  const handleGenerateMCQs = async (numQs = numQuestions, text = extractedText) => {
     if (!text) {
       setError('Please upload a PDF first');
       return;
@@ -67,13 +64,7 @@ function App() {
     setError('');
     
     try {
-      // Select the appropriate endpoint based on model
-      let endpoint = '/generate-mcqs'; // default auto fallback
-      if (model === 'ollama') endpoint = '/generate-mcqs-ollama';
-      else if (model === 'groq') endpoint = '/generate-mcqs-groq';
-      else if (model === 'gemini') endpoint = '/generate-mcqs-gemini';
-      
-      const response = await axios.post(`${API_BASE_URL}${endpoint}`, {
+      const response = await axios.post(`${API_BASE_URL}/generate-mcqs`, {
         text: text,
         num_questions: numQs
       });
@@ -86,7 +77,6 @@ function App() {
       
       // Append new questions to existing ones
       setMcqs(prev => [...prev, ...questions]);
-      setViewMode('attempt'); // Start with quiz attempt
       setLoading(false);
     } catch (err) {
       setError('Error generating MCQs: ' + (err.response?.data?.detail || err.message));
@@ -99,7 +89,6 @@ function App() {
     setExtractedText('');
     setError('');
     setShowUpload(false);
-    setViewMode('results');
   };
 
   const handleGenerateMore = async () => {
@@ -166,8 +155,6 @@ function App() {
           <FileUpload 
             onFileSelect={handleFileUpload} 
             loading={loading}
-            selectedModel={selectedModel}
-            onModelChange={setSelectedModel}
             numQuestions={numQuestions}
             onNumQuestionsChange={setNumQuestions}
           />
@@ -176,24 +163,13 @@ function App() {
         {/* Loading State */}
         {loading && <LoadingAnimation stage={loadingStage} />}
 
-        {/* MCQ Results or Quiz Attempt */}
+        {/* MCQ Results */}
         {!loading && mcqs.length > 0 && (
-          <>
-            {viewMode === 'attempt' ? (
-              <MCQDisplay 
-                mcqs={mcqs} 
-                onReset={handleReset}
-                onViewAnswers={() => setViewMode('results')}
-              />
-            ) : (
-              <MCQResults 
-                mcqs={mcqs} 
-                onReset={handleReset}
-                onGenerateMore={handleGenerateMore}
-                onAttemptQuiz={() => setViewMode('attempt')}
-              />
-            )}
-          </>
+          <MCQResults 
+            mcqs={mcqs} 
+            onReset={handleReset}
+            onGenerateMore={handleGenerateMore}
+          />
         )}
 
         {/* Features Section - Show on initial load */}

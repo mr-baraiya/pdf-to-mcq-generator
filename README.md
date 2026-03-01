@@ -1,32 +1,29 @@
-# PDF to MCQ Generator
+# File to MCQ Generator
 
 **Live Demo:** [https://pdf2mcq-henna.vercel.app/](https://pdf2mcq-henna.vercel.app/)  
 **Backend API:** [https://pdf-to-mcq-generator-production.up.railway.app](https://pdf-to-mcq-generator-production.up.railway.app)  
 **API Docs:** [https://pdf-to-mcq-generator-production.up.railway.app/docs](https://pdf-to-mcq-generator-production.up.railway.app/docs)
 
-A smart web application that automatically generates Multiple Choice Questions (MCQs) from PDF documents using AI models with intelligent fallback (Local Ollama → Groq → Gemini).
+A smart web application that automatically generates Multiple Choice Questions (MCQs) from PDF, PowerPoint, and Text documents using Groq AI.
 
 **Live Features:**
-- Local LLM Support - Free & private MCQ generation with Ollama
-- Smart Fallback System - Automatically switches between Ollama, Groq, and Gemini
-- Quiz Attempt Mode - Try quiz before seeing answers
-- PDF Export - Download questions and results as PDF
-- Cloud Storage - Secure PDF storage with Vercel Blob
-- Interactive Quiz - Real-time feedback and scoring
+- AI-Powered Generation - Fast MCQ creation with Groq (Llama 3.3 70B)
+- Multiple File Formats - Upload PDF, PPTX, and TXT files
+- Answer Key Display - View questions with correct answers
+- PDF Export - Download questions and answers as PDF
+- Cloud Storage - Secure file storage with Vercel Blob
+- Modern UI - Clean, responsive interface
 
 ---
 
 ## Features
 
 ### Core Functionality
-- **PDF Upload & Processing** - Drag-and-drop interface with cloud storage
-- **Local Ollama Support** - Free, private MCQ generation (Priority 1)
-- **Cloud AI Fallback** - Uses Groq (Llama 3.3) and Gemini when Ollama unavailable
-- **Smart Fallback System** - Automatically tries local first, then cloud APIs
-- **Quiz Attempt Mode** - Interactive quiz interface with instant feedback
-- **Answer Key View** - Detailed solutions with correct answers highlighted
-- **PDF Export** - Download questions and results in PDF format
-- **Score Tracking** - Real-time score calculation with percentage display
+- **Multiple File Formats** - Drag-and-drop interface for PDF, PPTX, and TXT files
+- **AI-Powered Generation** - Fast MCQ creation using Groq (Llama 3.3 70B)
+- **Answer Key Display** - View all questions with correct answers highlighted
+- **PDF Export** - Download questions and answers in PDF format
+- **Generate More** - Add additional questions to existing set
 - **Responsive Design** - Works seamlessly on all devices
 
 ### Technical Features
@@ -44,9 +41,9 @@ A smart web application that automatically generates Multiple Choice Questions (
 - **Python 3.8+**
 - **FastAPI** - High-performance web framework
 - **Uvicorn** - ASGI server
-- **PyPDF2** - PDF text extraction
+- **PyPDF2 & python-pptx** - PDF and PowerPoint text extraction
+- **Text files** - Native TXT file support
 - **Groq API** - Fast LLM inference (Llama 3.3 70B)
-- **Google Gemini** - Advanced AI for complex documents
 - **Vercel Blob** - Cloud file storage
 - **Pydantic** - Data validation
 
@@ -59,11 +56,8 @@ A smart web application that automatically generates Multiple Choice Questions (
 - **jsPDF** - PDF generation
 - **Lucide React** - Icon library
 
-### AI Models (Smart Fallback System)
-- **Local Ollama** - Priority 1: Free, private local LLM (optional)
-- **Groq (Llama 3.3 70B)** - Priority 2: Fast cloud inference
-- **Google Gemini Pro** - Priority 3: Advanced AI fallback
-- **Smart Selection** - Auto-switches based on availability and document size
+### AI Model
+- **Groq (Llama 3.3 70B)** - Fast, powerful cloud LLM inference
 
 ---
 
@@ -104,9 +98,8 @@ pdf-to-mcq-generator/
 │   │       ├── Navbar.jsx
 │   │       ├── Hero.jsx
 │   │       ├── Features.jsx
-│   │       ├── FileUpload.jsx      # PDF upload
-│   │       ├── MCQDisplay.jsx      # Quiz attempt mode
-│   │       ├── MCQResults.jsx      # Answer key view
+│   │       ├── FileUpload.jsx      # File upload interface
+│   │       ├── MCQResults.jsx      # Answer key display
 │   │       ├── LoadingAnimation.jsx
 │   │       └── AnimatedBackground.jsx
 │   ├── index.html
@@ -134,9 +127,7 @@ pdf-to-mcq-generator/
 ### Prerequisites
 - **Python 3.8+**
 - **Node.js 16+**
-- **Ollama** (optional - for free local LLM generation)
-- **Groq API Key** (fallback - get from https://console.groq.com)
-- **Gemini API Key** (fallback - get from https://makersuite.google.com/app/apikey)
+- **Groq API Key** (get from https://console.groq.com)
 - **Vercel Account** (for Blob storage - optional for local dev)
 
 ### 1. Clone Repository
@@ -159,13 +150,8 @@ cp .env.example .env
 
 Edit `backend/.env`:
 ```bash
-# Local Ollama (Priority 1 - Optional but recommended)
-OLLAMA_HOST=http://localhost:11434
-OLLAMA_MODEL=llama3.2
-
-# Cloud API Keys (Fallback when Ollama unavailable)
+# Groq API Key (required)
 GROQ_API_KEY=your_groq_api_key_here
-GEMINI_API_KEY=your_gemini_api_key_here
 
 # Frontend URL (for CORS)
 FRONTEND_URL=http://localhost:3000
@@ -192,19 +178,9 @@ VITE_API_URL=http://localhost:8000
 
 **Setup Options:**
 
-**Option A: Local Ollama (Free & Private) - Recommended**
-1. Install Ollama: https://ollama.ai/download
-2. Pull a model: `ollama pull llama3.2`
-3. Start Ollama: `ollama serve` (runs on port 11434)
-4. The app will automatically use Ollama first
-
-**Option B: Cloud APIs Only**
 Get API keys:
-- **Groq**: https://console.groq.com/keys
-- **Gemini**: https://makersuite.google.com/app/apikey
-- **Vercel Blob**: https://vercel.com/docs/storage/vercel-blob
-
-**Smart Fallback:** The system tries Ollama first, then falls back to Groq/Gemini if unavailable.
+- **Groq**: https://console.groq.com/keys (required)
+- **Vercel Blob**: https://vercel.com/docs/storage/vercel-blob (optional for local dev)
 
 ### 3. Install Dependencies
 
@@ -260,32 +236,25 @@ Open your browser and visit:
 
 ### Generating MCQs
 
-1. **Upload PDF**
-   - Click on upload area or drag PDF file
+1. **Upload File**
+   - Click on upload area or drag PDF/PPTX/TXT file
    - File is automatically uploaded to cloud storage
    - Text extraction begins immediately
 
 2. **MCQ Generation**
    - After upload, 10 questions are generated automatically
-   - AI automatically selects best model based on document size
-   - Questions appear in quiz attempt mode
+   - AI processes content using Groq (Llama 3.3 70B)
+   - Questions appear with correct answers highlighted
 
-3. **Attempt Quiz**
-   - Read each question carefully
-   - Select answer (A, B, C, or D) for each question
-   - Click "Check Answers" when done
-
-4. **View Results**
-   - See your score percentage
+3. **View Results**
+   - All questions displayed with answer keys
    - Correct answers shown in green
-   - Incorrect answers shown in red
-   - Click "Show Answers" for detailed answer key
+   - Clear, organized format
 
-5. **Additional Options**
-   - **Generate More**: Create 5 additional questions
-   - **Download PDF**: Export questions and results
-   - **Re-attempt Quiz**: Try again
-   - **New PDF**: Start with a new document
+4. **Additional Options**
+   - **Generate More**: Create additional questions from same document
+   - **Download PDF**: Export questions and answers
+   - **New File**: Start with a new document
 
 ---
 
@@ -355,13 +324,13 @@ Response:
 │    React     │◄───────►│   FastAPI   │◄───────►│  Groq API    │
 │   Frontend   │  HTTP   │   Backend   │  HTTP   │ (Llama 3.3)  │
 │  (Port 3000) │         │ (Port 8000) │         └──────────────┘
-└──────────────┘         └─────────────┘                │
-                                │                       │
-                                ↓                       ↓
-                         ┌─────────────┐         ┌──────────────┐
-                         │ Vercel Blob │         │  Gemini API  │
-                         │   Storage   │         │ (Fallback)   │
-                         └─────────────┘         └──────────────┘
+└──────────────┘         └─────────────┘
+                                │
+                                ↓
+                         ┌─────────────┐
+                         │ Vercel Blob │
+                         │   Storage   │
+                         └─────────────┘
 
 Flow:
 1. User uploads PDF → React Frontend
@@ -369,23 +338,18 @@ Flow:
 3. FastAPI → Vercel Blob (store PDF)
 4. FastAPI extracts text from PDF
 5. Frontend → FastAPI (generate-mcqs endpoint)
-6. FastAPI → AI Model (Groq/Gemini based on size)
+6. FastAPI → Groq AI (Llama 3.3)
 7. AI generates MCQs
 8. FastAPI → Frontend (return questions)
-9. User attempts quiz
-10. Frontend shows results & downloads PDF
+9. User views questions with answers
+10. Frontend allows PDF download
 ```
 
 ---
 
-## Smart AI Selection
+## AI System
 
-The system automatically selects the best AI model based on document size:
-
-- **Small PDFs (< 50KB)**: Groq (Llama 3.3) - Faster response
-- **Large PDFs (> 5MB)**: Gemini Pro - Better comprehension
-- **Medium PDFs (50KB - 5MB)**: Round-robin between both
-- **Fallback**: If Groq fails, automatically switches to Gemini
+The application uses Groq API with Llama 3.3 70B for fast, powerful MCQ generation.
 
 ---
 
@@ -413,7 +377,6 @@ The system automatically selects the best AI model based on document size:
 3. **Configure Environment Variables**
    ```
    GROQ_API_KEY=your_key
-   GEMINI_API_KEY=your_key
    BLOB_READ_WRITE_TOKEN=auto_generated
    ```
 4. **Deploy**
@@ -461,9 +424,9 @@ Add new features by:
 React frontend with component-based architecture:
 
 - **App.jsx** - Main state management
-- **MCQDisplay.jsx** - Quiz attempt interface
-- **MCQResults.jsx** - Answer key view
-- **FileUpload.jsx** - PDF upload component
+- **MCQResults.jsx** - Answer key display
+- **FileUpload.jsx** - File upload component
+- **LoadingAnimation.jsx** - Loading states
 
 Styling: Tailwind CSS classes with custom gradients
 
@@ -486,8 +449,8 @@ Interactive testing: http://localhost:8000/docs
 ## Troubleshooting
 
 ### "API Key Required" Error
-- Ensure GROQ_API_KEY and GEMINI_API_KEY are set in `.env`
-- Verify keys are valid on respective platforms
+- Ensure GROQ_API_KEY is set in `.env`
+- Verify key is valid on Groq platform
 
 ### "CORS Error" in Browser
 - Check backend is running on port 8000
@@ -521,25 +484,21 @@ For more help, see [docs/SETUP.md](docs/SETUP.md)
 
 ## Key Features Explained
 
-### Quiz Attempt Flow
-1. PDF uploaded → Questions generated automatically
-2. User taken directly to quiz attempt page
-3. Select answers (A, B, C, D) for each question
-4. Click "Check Answers" to submit
-5. View score with color-coded results
-6. Click "Show Answers" to see detailed answer key
+### MCQ Generation Flow
+1. File uploaded (PDF/PPTX/TXT) → Text extraction begins
+2. AI generates questions automatically using Groq
+3. Questions displayed immediately with correct answers highlighted
+4. Download as PDF or generate more questions
 
 ### PDF Export
 - Download questions as formatted PDF
-- Includes score if quiz attempted
+- Includes all questions with correct answers
 - Correct answers highlighted in green
 - Professional formatting with page numbers
 
 ### Smart AI Integration
-- Groq (Llama 3.3 70B): Fast, efficient for most documents
-- Google Gemini Pro: Advanced understanding for complex content
-- Automatic selection based on document characteristics
-- Seamless fallback if primary model unavailable
+- Groq (Llama 3.3 70B): Fast, powerful cloud LLM inference
+- Optimized prompts for high-quality MCQ generation
 
 ---
 
@@ -602,7 +561,6 @@ copies or substantial portions of the Software.
 - **[FastAPI](https://fastapi.tiangolo.com/)** - Modern Python web framework
 - **[React](https://react.dev/)** - JavaScript library for building user interfaces
 - **[Groq](https://groq.com/)** - High-performance AI inference
-- **[Google Gemini](https://ai.google.dev/)** - Advanced AI model
 - **[Vercel](https://vercel.com/)** - Deployment and blob storage platform
 - **[Tailwind CSS](https://tailwindcss.com/)** - Utility-first CSS framework
 - **[Framer Motion](https://www.framer.com/motion/)** - Animation library

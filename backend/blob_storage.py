@@ -18,10 +18,10 @@ def validate_blob_credentials():
     tok = get_token()
     
     if tok:
-        log.info("✓ Vercel Blob ready")
+        log.info("Vercel Blob ready")
         return True
     else:
-        log.warning("⚠ Vercel Blob not configured")
+        log.warning("Vercel Blob not configured")
         return False
 
 

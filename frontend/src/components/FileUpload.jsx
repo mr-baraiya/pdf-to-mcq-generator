@@ -1,40 +1,15 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Upload, FileText, X, CheckCircle, Sparkles, Zap, Brain, ChevronDown, Rocket, Laptop, Flame, Gem } from 'lucide-react';
+import { Upload, FileText, X, CheckCircle, Sparkles, Zap, Brain, Flame } from 'lucide-react';
 
 const FileUpload = ({ 
   onFileSelect, 
   loading,
-  selectedModel,
-  onModelChange,
   numQuestions,
   onNumQuestionsChange
 }) => {
   const [dragActive, setDragActive] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [modelDropdownOpen, setModelDropdownOpen] = useState(false);
-  const dropdownRef = useRef(null);
-
-  const modelOptions = [
-    { value: 'auto', label: 'Auto (Recommended)', subtitle: 'Smart Fallback', icon: Rocket, color: 'text-indigo-400' },
-    { value: 'ollama', label: 'Ollama', subtitle: 'Local & Free', icon: Laptop, color: 'text-blue-400' },
-    { value: 'groq', label: 'Groq', subtitle: 'Fast Cloud', icon: Flame, color: 'text-orange-400' },
-    { value: 'gemini', label: 'Gemini', subtitle: 'Advanced AI', icon: Gem, color: 'text-purple-400' },
-  ];
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setModelDropdownOpen(false);
-      }
-    };
-
-    if (modelDropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
-    }
-  }, [modelDropdownOpen]);
 
   const handleDrag = useCallback((e) => {
     e.preventDefault();
@@ -54,10 +29,11 @@ const FileUpload = ({
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const file = e.dataTransfer.files[0];
       const validTypes = [
-        'application/pdf'
+        'application/pdf',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation'
       ];
       
-      if (validTypes.includes(file.type) || file.name.endsWith('.pdf')) {
+      if (validTypes.includes(file.type) || file.name.endsWith('.pdf') || file.name.endsWith('.pptx')) {
         setSelectedFile(file);
         onFileSelect(file);
       }
@@ -89,7 +65,7 @@ const FileUpload = ({
             Upload Your File
           </h2>
           <p className="text-gray-400">
-            Drag and drop your PDF
+            Drag and drop your PDF, PowerPoint, or Text file
           </p>
         </motion.div>
 
@@ -120,7 +96,7 @@ const FileUpload = ({
 
             <input
               type="file"
-              accept=".pdf"
+              accept=".pdf,.pptx,.txt"
               onChange={handleFileInput}
               disabled={loading}
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
@@ -157,7 +133,7 @@ const FileUpload = ({
                     </h3>
                     <p className="text-gray-400 mb-4">or click to browse</p>
                     <div className="px-6 py-2 rounded-lg bg-indigo-500/20 border border-indigo-400/30 text-indigo-300 text-sm">
-                      Supports PDF
+                      Supports PDF, PPTX & TXT
                     </div>
                   </motion.div>
                 ) : (
@@ -213,67 +189,22 @@ const FileUpload = ({
           </h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Model Selection Dropdown */}
+            {/* AI Model Display */}
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
                 AI Model
               </label>
-              <div className="relative" ref={dropdownRef}>
-                <button
-                  type="button"
-                  onClick={() => !loading && setModelDropdownOpen(!modelDropdownOpen)}
-                  disabled={loading}
-                  className="w-full glass rounded-xl px-4 py-3 pl-11 pr-10 
-                    border border-white/10 text-white bg-white/5
-                    hover:border-indigo-400/50 hover:bg-white/10
-                    focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent
-                    disabled:opacity-50 disabled:cursor-not-allowed
-                    transition-all duration-200 cursor-pointer text-left
-                    flex items-center justify-between"
-                >
-                  <span className="flex items-center">
-                    {modelOptions.find(opt => opt.value === selectedModel)?.label} - {modelOptions.find(opt => opt.value === selectedModel)?.subtitle}
-                  </span>
-                </button>
-                {(() => {
-                  const selectedOption = modelOptions.find(opt => opt.value === selectedModel);
-                  const IconComponent = selectedOption?.icon;
-                  return IconComponent && <IconComponent className={`absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 ${selectedOption.color} pointer-events-none`} />;
-                })()}
-                <ChevronDown className={`absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none transition-transform ${modelDropdownOpen ? 'rotate-180' : ''}`} />
-                
-                {/* Custom Dropdown Menu */}
-                {modelDropdownOpen && (
-                  <div className="absolute z-50 mt-2 w-full glass rounded-xl border border-white/10 bg-gray-900 overflow-hidden shadow-xl">
-                    {modelOptions.map((option) => {
-                      const IconComponent = option.icon;
-                      return (
-                        <button
-                          key={option.value}
-                          type="button"
-                          onClick={() => {
-                            onModelChange(option.value);
-                            setModelDropdownOpen(false);
-                          }}
-                          className={`w-full px-4 py-3 pl-11 text-left hover:bg-white/10 transition-colors flex items-center
-                            ${selectedModel === option.value ? 'bg-white/5' : ''}`}
-                        >
-                          <IconComponent className={`absolute left-3 w-5 h-5 ${option.color}`} />
-                          <div>
-                            <div className="text-white font-medium">{option.label}</div>
-                            <div className="text-gray-400 text-xs">{option.subtitle}</div>
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
+              <div className="w-full glass rounded-xl px-4 py-3 pl-11 
+                border border-white/10 text-white bg-white/5
+                flex items-center">
+                <Flame className="absolute left-3 w-5 h-5 text-orange-400" />
+                <div>
+                  <div className="text-white font-medium">Groq - Fast Cloud</div>
+                  <div className="text-gray-400 text-xs">Llama 3.3 70B</div>
+                </div>
               </div>
               <p className="mt-2 text-xs text-gray-500">
-                {selectedModel === 'auto' && '• Tries Ollama → Groq → Gemini'}
-                {selectedModel === 'ollama' && '• Private, no API costs (requires Ollama running)'}
-                {selectedModel === 'groq' && '• Very fast inference, cloud-based'}
-                {selectedModel === 'gemini' && '• Best for complex documents'}
+                • Very fast inference, cloud-based
               </p>
             </div>
 
