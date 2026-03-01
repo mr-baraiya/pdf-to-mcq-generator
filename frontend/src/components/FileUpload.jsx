@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Upload, FileText, X, CheckCircle, Sparkles, Zap, Brain, Flame } from 'lucide-react';
+import { Upload, FileText, X, CheckCircle } from 'lucide-react';
 
 const FileUpload = ({ 
   onFileSelect, 
@@ -53,8 +53,8 @@ const FileUpload = ({
   };
 
   return (
-    <section className="py-20 px-4">
-      <div className="max-w-3xl mx-auto">
+    <section className="py-20 px-4" style={{ overflow: 'visible' }}>
+      <div className="max-w-3xl mx-auto" style={{ overflow: 'visible' }}>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -176,68 +176,47 @@ const FileUpload = ({
           </div>
         </motion.div>
 
-        {/* AI Model Selection */}
+        {/* Number of Questions Selection */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
           className="mt-8 glass rounded-2xl p-6 border border-white/10"
         >
-          <h3 className="text-lg font-semibold mb-4 text-white flex items-center">
-            <Sparkles className="w-5 h-5 mr-2 text-indigo-400" />
-            Generation Settings
-          </h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* AI Model Display */}
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                AI Model
-              </label>
-              <div className="w-full glass rounded-xl px-4 py-3 pl-11 
-                border border-white/10 text-white bg-white/5
-                flex items-center">
-                <Flame className="absolute left-3 w-5 h-5 text-orange-400" />
-                <div>
-                  <div className="text-white font-medium">Groq - Fast Cloud</div>
-                  <div className="text-gray-400 text-xs">Llama 3.3 70B</div>
-                </div>
-              </div>
-              <p className="mt-2 text-xs text-gray-500">
-                • Very fast inference, cloud-based
-              </p>
+          <div className="space-y-4">
+            {/* Live Counter */}
+            <div className="flex justify-center items-center gap-3">
+              <span className="text-sm font-medium text-gray-400">Questions:</span>
+              <motion.span 
+                key={numQuestions}
+                initial={{ scale: 1.2, color: '#818cf8' }}
+                animate={{ scale: 1, color: '#a5b4fc' }}
+                className="text-4xl font-bold text-indigo-300"
+              >
+                {numQuestions}
+              </motion.span>
             </div>
 
-            {/* Number of Questions Dropdown */}
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Number of Questions
-              </label>
-              <div className="relative">
-                <select
-                  value={numQuestions}
-                  onChange={(e) => onNumQuestionsChange(parseInt(e.target.value))}
-                  disabled={loading}
-                  className="w-full appearance-none glass rounded-xl px-4 py-3 pr-10 
-                    border border-white/10 text-white bg-white/5
-                    hover:border-indigo-400/50 hover:bg-white/10
-                    focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent
-                    disabled:opacity-50 disabled:cursor-not-allowed
-                    transition-all duration-200 cursor-pointer"
-                >
-                  <option value="3" className="bg-gray-900 text-white">3 Questions</option>
-                  <option value="5" className="bg-gray-900 text-white">5 Questions</option>
-                  <option value="10" className="bg-gray-900 text-white">10 Questions</option>
-                  <option value="15" className="bg-gray-900 text-white">15 Questions</option>
-                  <option value="20" className="bg-gray-900 text-white">20 Questions</option>
-                  <option value="25" className="bg-gray-900 text-white">25 Questions</option>
-                  <option value="30" className="bg-gray-900 text-white">30 Questions</option>
-                </select>
-                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
-              </div>
-              <p className="mt-2 text-xs text-gray-500">
-                • More questions = longer generation time
-              </p>
+            {/* Slider */}
+            <div className="px-2">
+              <input
+                type="range"
+                min="3"
+                max="50"
+                value={numQuestions}
+                onChange={(e) => onNumQuestionsChange(parseInt(e.target.value))}
+                disabled={loading}
+                className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer slider-thumb disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{
+                  background: `linear-gradient(to right, #6366f1 0%, #6366f1 ${((numQuestions - 3) / (50 - 3)) * 100}%, rgba(255,255,255,0.1) ${((numQuestions - 3) / (50 - 3)) * 100}%, rgba(255,255,255,0.1) 100%)`
+                }}
+              />
+            </div>
+
+            {/* Min/Max Labels */}
+            <div className="flex justify-between text-xs text-gray-500 px-2">
+              <span>3</span>
+              <span>50</span>
             </div>
           </div>
         </motion.div>

@@ -1,0 +1,142 @@
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import axios from 'axios';
+import FileUpload from '../components/FileUpload';
+import LoadingAnimation from '../components/LoadingAnimation';
+import MCQResults from '../components/MCQResults';
+import { AlertCircle } from 'lucide-react';
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
+function GeneratorPage() {
+  const [mcqs, setMcqs] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [loadingStage, setLoadingStage] = useState('uploading');
+  const [error, setError] = useState('');
+  const [extractedText, setExtractedText] = useState('');
+  const [numQuestions, setNumQuestions] = useState(10);
+
+  const handleFileUpload = async (file) => {
+    setLoading(true);
+    setLoadingStage('uploading');
+    setError('');
+    
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      setLoadingStage('extracting');
+      const response = await axios.post(`${API_BASE_URL}/upload-file`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      
+      setExtractedText(response.data.text);
+      
+      await handleGenerateMCQs(numQuestions, response.data.text);
+    } catch (err) {
+      let errorMessage = 'Error uploading file: ';
+      
+      if (err.response?.status === 413) {
+        errorMessage = 'File too large! Maximum size is 5MB. Please upload a smaller file.';
+      } else {
+        errorMessage += err.response?.data?.detail || err.message;
+      }
+      
+      setError(errorMessage);
+      setLoading(false);
+    }
+  };
+
+  const handleGenerateMCQs = async (numQs = numQuestions, text = extractedText) => {
+    if (!text) {
+      setError('Please upload a file first');
+      return;
+    }
+    
+    setLoading(true);
+    setLoadingStage('generating');
+    setError('');
+    
+    try {
+      const response = await axios.post(`${API_BASE_URL}/generate-mcqs`, {
+        text: text,
+        num_questions: numQs
+      });
+      
+      const questions = response.data.questions.map(q => ({
+        ...q,
+        answer: q.answer || q.correct_answer
+      }));
+      
+      setMcqs(prev => [...prev, ...questions]);
+      setLoading(false);
+    } catch (err) {
+      setError('Error generating MCQs: ' + (err.response?.data?.detail || err.message));
+      setLoading(false);
+    }
+  };
+
+  const handleReset = () => {
+    setMcqs([]);
+    setExtractedText('');
+    setError('');
+  };
+
+  const handleGenerateMore = async () => {
+    await handleGenerateMCQs(numQuestions, extractedText);
+  };
+
+  return (
+    <div className="relative">
+      {/* Error Banner */}
+      <AnimatePresence>
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            className="fixed top-20 left-1/2 -translate-x-1/2 z-50 max-w-md mx-4"
+          >
+            <div className="glass rounded-xl p-4 border border-red-500/50 bg-red-500/10 flex items-start space-x-3">
+              <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="font-semibold text-red-400">Error</p>
+                <p className="text-sm text-red-300">{error}</p>
+              </div>
+              <button
+                onClick={() => setError('')}
+                className="ml-auto text-red-400 hover:text-red-300"
+              >
+                ×
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* File Upload Section */}
+      {!loading && mcqs.length === 0 && (
+        <FileUpload 
+          onFileSelect={handleFileUpload} 
+          loading={loading}
+          numQuestions={numQuestions}
+          onNumQuestionsChange={setNumQuestions}
+        />
+      )}
+
+      {/* Loading State */}
+      {loading && <LoadingAnimation stage={loadingStage} />}
+
+      {/* MCQ Results */}
+      {!loading && mcqs.length > 0 && (
+        <MCQResults 
+          mcqs={mcqs} 
+          onReset={handleReset}
+          onGenerateMore={handleGenerateMore}
+        />
+      )}
+    </div>
+  );
+}
+
+export default GeneratorPage;
