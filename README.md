@@ -24,8 +24,6 @@ Frontend: React, Vite, Tailwind CSS, Framer Motion
 
 ## Quick Start
 
-## Quick Start
-
 Prerequisites: Python 3.8+, Node.js 16+, Groq API Key
 
 1. Clone repository
