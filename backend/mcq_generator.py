@@ -10,8 +10,8 @@ log = logging.getLogger(__name__)
 def generate_mcqs(txt, num=5):
     if not txt or not txt.strip():
         raise ValueError("Text empty")
-    if num < 1 or num > 20:
-        raise ValueError("Questions: 1-20")
+    if num < 1 or num > 50:
+        raise ValueError("Questions: 1-50")
     
     return generate_with_groq(txt, num)
 
@@ -29,7 +29,7 @@ def generate_with_groq(txt, num):
             {"role": "user", "content": make_prompt(txt, num)}
         ],
         temperature=0.7,
-        max_tokens=2000
+        max_tokens=4000
     )
     
     return parse_response(res.choices[0].message.content)
