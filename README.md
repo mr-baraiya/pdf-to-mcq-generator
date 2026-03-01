@@ -6,14 +6,6 @@
 
 A smart web application that automatically generates Multiple Choice Questions (MCQs) from PDF, PowerPoint, and Text documents using Groq AI.
 
-**Live Features:**
-- AI-Powered Generation - Fast MCQ creation with Groq (Llama 3.3 70B)
-- Multiple File Formats - Upload PDF, PPTX, and TXT files
-- Answer Key Display - View questions with correct answers
-- PDF Export - Download questions and answers as PDF
-- Cloud Storage - Secure file storage with Vercel Blob
-- Modern UI - Clean, responsive interface
-
 ---
 
 ## Features
