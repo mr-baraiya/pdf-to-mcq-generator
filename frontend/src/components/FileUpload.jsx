@@ -54,11 +54,10 @@ const FileUpload = ({
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const file = e.dataTransfer.files[0];
       const validTypes = [
-        'application/pdf',
-        'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+        'application/pdf'
       ];
       
-      if (validTypes.includes(file.type) || file.name.endsWith('.pdf') || file.name.endsWith('.pptx')) {
+      if (validTypes.includes(file.type) || file.name.endsWith('.pdf')) {
         setSelectedFile(file);
         onFileSelect(file);
       }
@@ -90,7 +89,7 @@ const FileUpload = ({
             Upload Your File
           </h2>
           <p className="text-gray-400">
-            Drag and drop your PDF or PPTX
+            Drag and drop your PDF
           </p>
         </motion.div>
 
@@ -121,7 +120,7 @@ const FileUpload = ({
 
             <input
               type="file"
-              accept=".pdf,.pptx"
+              accept=".pdf"
               onChange={handleFileInput}
               disabled={loading}
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
@@ -158,7 +157,7 @@ const FileUpload = ({
                     </h3>
                     <p className="text-gray-400 mb-4">or click to browse</p>
                     <div className="px-6 py-2 rounded-lg bg-indigo-500/20 border border-indigo-400/30 text-indigo-300 text-sm">
-                      Supports PDF & PPTX
+                      Supports PDF
                     </div>
                   </motion.div>
                 ) : (

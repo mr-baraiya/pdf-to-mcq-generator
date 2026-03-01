@@ -33,20 +33,19 @@ def create_app():
             version="1.0.0"
         )
         
-        # Allow frontend to call this backend
-        # CORS: Allow credentials with specific origins or regex
         app.add_middleware(
             CORSMiddleware,
             allow_origins=[
                 "http://localhost:3000",
                 "http://localhost:5173",
                 "https://pdf-to-mcq-generator.vercel.app",
-                "https://super-giggle-wrprqv5jpwr9fx7-3000.app.github.dev"
+                "https://super-giggle-wrprqv5jpwr9fx7-3000.app.github.dev",
+                "https://pdf2mcq-henna.vercel.app"
             ],
-            allow_origin_regex=r"https://.*\.app\.github\.dev",
+            allow_origin_regex="https://.*",
             allow_credentials=True,
             allow_methods=["*"],
-            allow_headers=["*"]
+            allow_headers=["*"],
         )
         
         log.info("✓ FastAPI app created successfully")
