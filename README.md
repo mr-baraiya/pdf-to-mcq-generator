@@ -67,9 +67,11 @@ Access at http://localhost:3000
 
 ## API Endpoints
 
-GET / - Health check
-POST /api/upload-pdf - Upload file and extract text
-POST /api/generate-mcqs - Generate MCQs from text
+```
+GET  /                     → Health check
+POST /api/upload-pdf       → Upload file & extract text
+POST /api/generate-mcqs    → Generate MCQs
+```
 
 Full API docs: http://localhost:8000/docs
 
