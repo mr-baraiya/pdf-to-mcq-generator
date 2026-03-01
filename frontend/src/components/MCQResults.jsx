@@ -8,12 +8,15 @@ import {
   ChevronLeft,
   ChevronRight,
   ChevronDown,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { jsPDF } from "jspdf";
 
 const MCQResults = ({ mcqs, onGenerateMore, onReset }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(1);
+  const [showAnswers, setShowAnswers] = useState({});
 
   const totalPages =
     itemsPerPage === "all" ? 1 : Math.ceil(mcqs.length / itemsPerPage);
@@ -23,6 +26,13 @@ const MCQResults = ({ mcqs, onGenerateMore, onReset }) => {
       ? mcqs.length
       : Math.min(startIndex + itemsPerPage, mcqs.length);
   const currentMcqs = mcqs.slice(startIndex, endIndex);
+
+  const toggleAnswer = (questionIndex) => {
+    setShowAnswers(prev => ({
+      ...prev,
+      [questionIndex]: !prev[questionIndex]
+    }));
+  };
 
   const goToNextPage = () => {
     if (currentPage < totalPages - 1) {
@@ -142,7 +152,7 @@ const MCQResults = ({ mcqs, onGenerateMore, onReset }) => {
             Generated MCQs - {mcqs.length} Questions
           </h2>
           <p className="text-gray-400 mb-6">
-            Questions with correct answers highlighted
+            Click "Show Answer" to reveal correct answers
           </p>
 
           {/* Action Buttons */}
@@ -190,16 +200,44 @@ const MCQResults = ({ mcqs, onGenerateMore, onReset }) => {
           transition={{ duration: 0.3 }}
           className="space-y-6"
         >
-          {currentMcqs.map((mcq, idx) => (
+          {currentMcqs.map((mcq, idx) => {
+            const questionIndex = startIndex + idx;
+            const isAnswerVisible = showAnswers[questionIndex];
+            
+            return (
             <div
-              key={startIndex + idx}
+              key={questionIndex}
               className="glass rounded-2xl p-4 sm:p-6 border border-white/10 hover:border-indigo-400/30 transition-all"
             >
               {/* Question */}
               <div className="mb-6">
-                <span className="inline-block px-3 py-1 rounded-lg bg-indigo-500/20 text-indigo-300 text-sm font-semibold mb-3">
-                  Question {startIndex + idx + 1}
-                </span>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="inline-block px-3 py-1 rounded-lg bg-indigo-500/20 text-indigo-300 text-sm font-semibold">
+                    Question {questionIndex + 1}
+                  </span>
+                  <motion.button
+                    onClick={() => toggleAnswer(questionIndex)}
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-xl glass border font-semibold transition-all ${
+                      isAnswerVisible 
+                        ? 'border-red-500/40 text-red-300 hover:bg-red-500/10 hover:border-red-500/60' 
+                        : 'border-green-500/40 text-green-300 hover:bg-green-500/10 hover:border-green-500/60'
+                    }`}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    {isAnswerVisible ? (
+                      <>
+                        <EyeOff className="w-4 h-4" />
+                        <span className="text-sm">Hide Answer</span>
+                      </>
+                    ) : (
+                      <>
+                        <Eye className="w-4 h-4" />
+                        <span className="text-sm">Show Answer</span>
+                      </>
+                    )}
+                  </motion.button>
+                </div>
                 <h3 className="text-lg sm:text-xl font-semibold text-white">
                   {mcq.question}
                 </h3>
@@ -225,7 +263,7 @@ const MCQResults = ({ mcqs, onGenerateMore, onReset }) => {
                     <motion.div
                       key={optIndex}
                       className={`flex items-start space-x-3 p-4 rounded-xl transition-all ${
-                        isCorrect
+                        isCorrect && isAnswerVisible
                           ? 'bg-green-500/10 border-2 border-green-400/50'
                           : 'bg-white/5 border border-white/10'
                       }`}
@@ -233,7 +271,7 @@ const MCQResults = ({ mcqs, onGenerateMore, onReset }) => {
                     >
                       <span
                         className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm ${
-                          isCorrect
+                          isCorrect && isAnswerVisible
                             ? 'bg-green-500/20 text-green-300'
                             : 'bg-white/10 text-gray-400'
                         }`}
@@ -241,11 +279,11 @@ const MCQResults = ({ mcqs, onGenerateMore, onReset }) => {
                         {optionLabel}
                       </span>
                       <p
-                        className={`flex-1 ${isCorrect ? 'text-green-100 font-medium' : 'text-gray-300'}`}
+                        className={`flex-1 ${isCorrect && isAnswerVisible ? 'text-green-100 font-medium' : 'text-gray-300'}`}
                       >
                         {option}
                       </p>
-                      {isCorrect && (
+                      {isCorrect && isAnswerVisible && (
                         <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
                       )}
                     </motion.div>
@@ -253,7 +291,7 @@ const MCQResults = ({ mcqs, onGenerateMore, onReset }) => {
                 })}
               </div>
             </div>
-          ))}
+          );})}
         </motion.div>
 
         {/* Questions per page dropdown and Pagination */}
