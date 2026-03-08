@@ -9,12 +9,10 @@ log = logging.getLogger(__name__)
 
 
 def get_token():
-    """Get Vercel Blob token from .env"""
     return os.getenv("VERCEL_BLOB_READ_WRITE_TOKEN")
 
 
 def validate_blob_credentials():
-    """Check if credentials are set"""
     tok = get_token()
     
     if tok:
@@ -26,7 +24,6 @@ def validate_blob_credentials():
 
 
 async def upload_pdf_to_blob(content, fname):
-    """Upload PDF to cloud storage using official Vercel SDK"""
     
     tok = get_token()
     
@@ -37,7 +34,6 @@ async def upload_pdf_to_blob(content, fname):
     try:
         log.info(f"Uploading: {fname}")
         
-        # Run synchronous put in executor to make it async
         loop = asyncio.get_event_loop()
         result = await loop.run_in_executor(
             None,
@@ -59,7 +55,6 @@ async def upload_pdf_to_blob(content, fname):
 
 
 async def download_pdf_from_blob(url):
-    """Download PDF from cloud storage"""
     import aiohttp
     
     try:
@@ -81,7 +76,6 @@ async def download_pdf_from_blob(url):
 
 
 async def delete_pdf_from_blob(url):
-    """Delete PDF from cloud storage using official Vercel SDK"""
     
     tok = get_token()
     
