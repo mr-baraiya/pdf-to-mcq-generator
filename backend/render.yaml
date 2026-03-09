@@ -1,12 +1,11 @@
 services:
   - type: web
     name: pdf-to-mcq-generator-fastapi
-    env: docker
+    runtime: docker
     rootDir: backend
     dockerfilePath: ./Dockerfile
     plan: free
     autoDeploy: true
-    healthCheckPath: /docs
     envVars:
       - key: FRONTEND_URL
         sync: false
