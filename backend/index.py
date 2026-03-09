@@ -13,10 +13,11 @@ log = logging.getLogger(__name__)
 
 app = FastAPI(title="File to MCQ Generator API", version="1.0.0")
 
+_frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:5173", "https://pdf2mcq-henna.vercel.app"],
-    allow_origin_regex="https://.*",
+    allow_origins=[_frontend_url],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -6,7 +6,7 @@ import LoadingAnimation from '../components/LoadingAnimation';
 import MCQResults from '../components/MCQResults';
 import { AlertCircle } from 'lucide-react';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 function GeneratorPage() {
   const [mcqs, setMcqs] = useState([]);

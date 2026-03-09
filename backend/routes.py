@@ -40,9 +40,6 @@ def setup_routes(app):
             content = await file.read()
             blob = await upload_pdf_to_blob(content, file.filename)
             
-            if not blob:
-                raise HTTPException(status_code=500, detail="Upload failed")
-            
             try:
                 file_stream = io.BytesIO(content)
                 if is_txt:
@@ -52,13 +49,14 @@ def setup_routes(app):
                 else:
                     text = extract_text_from_pdf(file_stream)
             except Exception as e:
-                await delete_pdf_from_blob(blob.get("url"))
+                if blob:
+                    await delete_pdf_from_blob(blob.get("url"))
                 raise HTTPException(status_code=500, detail=f"Extract failed: {str(e)}")
             
             return {
                 "filename": file.filename,
                 "text": text,
-                "blob_url": blob.get("url"),
+                "blob_url": blob.get("url") if blob else None,
                 "status": "success"
             }
             

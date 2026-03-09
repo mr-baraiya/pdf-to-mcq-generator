@@ -1,16 +1,16 @@
 # Extract text from PDF files
 
 import logging
-import os
+import shutil
 from io import BytesIO
 from PyPDF2 import PdfReader
 
 try:
     from pdf2image import convert_from_bytes, convert_from_path
     import pytesseract
-    OCR_AVAILABLE = True
+    OCR_LIBRARIES_AVAILABLE = True
 except ImportError:
-    OCR_AVAILABLE = False
+    OCR_LIBRARIES_AVAILABLE = False
 
 try:
     from pptx import Presentation
@@ -21,16 +21,48 @@ except ImportError:
 log = logging.getLogger(__name__)
 
 
+def _ocr_binaries_available():
+    return shutil.which("tesseract") and shutil.which("pdftoppm")
+
+
+def _extract_text_with_ocr(pdf):
+    if not OCR_LIBRARIES_AVAILABLE:
+        raise ValueError("OCR Python packages are not available in this environment.")
+
+    if not _ocr_binaries_available():
+        raise ValueError(
+            "This PDF appears to be image-based. OCR requires system tools that are not available here: tesseract and pdftoppm (Poppler)."
+        )
+
+    if isinstance(pdf, BytesIO):
+        pdf.seek(0)
+        images = convert_from_bytes(pdf.read())
+    else:
+        images = convert_from_path(pdf)
+
+    ocr_text_parts = []
+    for page_number, image in enumerate(images, start=1):
+        page_text = pytesseract.image_to_string(image).strip()
+        log.info(f"OCR page {page_number}: {len(page_text)} chars")
+        if page_text:
+            ocr_text_parts.append(page_text)
+
+    ocr_text = "\n".join(ocr_text_parts).strip()
+    if not ocr_text:
+        raise ValueError("OCR ran but no readable text was found in the PDF.")
+
+    log.info(f"Extracted {len(ocr_text)} chars via OCR")
+    return ocr_text
+
+
 def extract_text_from_pdf(pdf):
-    """Extract text from PDF (with OCR fallback)"""
+    """Extract text from PDFs, using OCR as a fallback for image-based files."""
     try:
-        # 1. Try PyPDF2 first (fastest)
         if isinstance(pdf, BytesIO):
             reader = PdfReader(pdf)
             pdf.seek(0)
         else:
-            with open(pdf, 'rb') as f:
-                reader = PdfReader(f)
+            reader = PdfReader(pdf)
         
         txt = ""
         for p in reader.pages:
@@ -39,58 +71,13 @@ def extract_text_from_pdf(pdf):
                 txt += pt + "\n"
         
         txt = txt.strip()
-        
-        # 2. If text is sufficient, return it
-        if len(txt) > 50:
+
+        if txt:
             log.info(f"Extracted {len(txt)} chars via PyPDF2")
             return txt
-            
-        # 3. If text is empty/low, try OCR
-        if not OCR_AVAILABLE:
-            log.warning("OCR not available (missing libraries)")
-            raise ValueError("PDF contains only images. Install OCR: (1) pip install pdf2image pytesseract (2) Install Poppler: https://github.com/oschwartz10612/poppler-windows/releases/ (3) Install Tesseract: https://github.com/UB-Mannheim/tesseract/wiki")
-            
-        log.info("Text empty/low, attempting OCR extraction...")
-        
-        try:
-            images = []
-            if isinstance(pdf, BytesIO):
-                pdf.seek(0)  # Reset pointer before reading bytes
-                images = convert_from_bytes(pdf.read())
-            else:
-                images = convert_from_path(pdf)
-            
-            ocr_text = ""
-            for i, image in enumerate(images):
-                page_text = pytesseract.image_to_string(image)
-                ocr_text += page_text + "\n"
-                log.info(f"OCR Page {i+1}: {len(page_text)} chars")
-            
-            ocr_text = ocr_text.strip()
-            
-            if len(ocr_text) < 50:
-                raise ValueError("PDF contains only images but no readable text was extracted. Please upload a PDF with text content.")
-            
-            log.info(f"Extracted {len(ocr_text)} chars via OCR")
-            return ocr_text
-            
-        except Exception as ocr_err:
-            log.error(f"OCR failed: {str(ocr_err)}")
-            error_msg = str(ocr_err)
-            
-            # Check for Poppler not installed error
-            if "poppler" in error_msg.lower() or "unable to get page count" in error_msg.lower():
-                raise ValueError("PDF contains only images. Poppler not installed. Download from: https://github.com/oschwartz10612/poppler-windows/releases/ and add to PATH")
-            
-            # Check for Tesseract not installed error
-            if "tesseract is not installed" in error_msg.lower() or "tesseractnotfound" in error_msg.lower():
-                raise ValueError("PDF contains only images. Tesseract OCR engine not installed. Install from: https://github.com/UB-Mannheim/tesseract/wiki")
-            
-            # Check if no text was extracted
-            if len(txt) == 0:
-                raise ValueError(f"Failed to extract text from image-based PDF: {error_msg}")
-            
-            return txt  # Return whatever we got from PyPDF2
+
+        log.info("No selectable text found. Trying OCR fallback.")
+        return _extract_text_with_ocr(pdf)
         
     except Exception as e:
         log.error(f"Extract error: {str(e)}")
