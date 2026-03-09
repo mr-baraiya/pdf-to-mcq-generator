@@ -1,109 +1,144 @@
-# File to MCQ Generator
+# PDF to MCQ Generator
 
 **Live Demo:** [https://pdf2mcq-henna.vercel.app/](https://pdf2mcq-henna.vercel.app/)  
 **Backend API:** [https://pdf-to-mcq-generator-production.up.railway.app](https://pdf-to-mcq-generator-production.up.railway.app)  
 **API Docs:** [https://pdf-to-mcq-generator-production.up.railway.app/docs](https://pdf-to-mcq-generator-production.up.railway.app/docs)
 
-A smart web application that automatically generates Multiple Choice Questions (MCQs) from PDF, PowerPoint, and Text documents using Groq AI.
+A web application that automatically generates Multiple Choice Questions (MCQs) from PDF, PowerPoint, and Text documents using Groq AI.
 
 ---
 
 ## Features
 
 - Upload PDF, PPTX, and TXT files with drag-and-drop
-- Generate 3-50 MCQs using AI (Groq Llama 3.3 70B)
+- Extracts text from both selectable and image-based (scanned) PDFs via OCR
+- Generate 3–50 MCQs using Groq Llama 3.3 70B
 - View questions with highlighted correct answers
 - Paginated results with customizable items per page
-- Export questions and answers as PDF
-- Modern responsive interface with smooth animations
+- Export questions as PDF
+- Modern responsive UI with smooth animations
 
 ## Tech Stack
 
-Backend: Python, FastAPI, Groq API, Vercel Blob Storage
-Frontend: React, Vite, Tailwind CSS, Framer Motion
+**Backend:** Python 3.12, FastAPI, Groq API, Vercel Blob Storage, PyPDF2, Tesseract OCR  
+**Frontend:** React 18, Vite, Tailwind CSS, Framer Motion
 
 ## Quick Start
 
-Prerequisites: Python 3.8+, Node.js 16+, Groq API Key
+**Prerequisites:** Python 3.8+, Node.js 16+, Groq API key, `tesseract-ocr` and `poppler-utils` system packages
 
-1. Clone repository
+```bash
+# Ubuntu / Debian
+sudo apt-get install -y tesseract-ocr tesseract-ocr-eng poppler-utils
+```
+
+### 1. Clone
+
 ```bash
 git clone https://github.com/mr-baraiya/pdf-to-mcq-generator.git
 cd pdf-to-mcq-generator
 ```
 
-2. Setup environment variables
+### 2. Backend
 
-Backend (.env in backend/):
+```bash
+cd backend
+pip install -r requirements.txt
+```
+
+Create `backend/.env`:
 ```
 GROQ_API_KEY=your_groq_api_key
 FRONTEND_URL=http://localhost:3000
-BLOB_READ_WRITE_TOKEN=your_vercel_blob_token
+VERCEL_BLOB_READ_WRITE_TOKEN=your_vercel_blob_token
+VERCEL_BLOB_STORE_ID=your_vercel_store_id
 ```
 
-Frontend (.env in frontend/):
-```
-VITE_API_URL=http://localhost:8000
-```
-
-3. Install dependencies
 ```bash
-cd backend && pip install -r requirements.txt
-cd ../frontend && npm install
+uvicorn index:app --reload
+# Runs on http://localhost:8000
 ```
 
-4. Run servers
-```bash
-# Backend (port 8000)
-cd backend
-python -m uvicorn index:app --reload
+### 3. Frontend
 
-# Frontend (port 3000)
+```bash
 cd frontend
+npm install
 npm run dev
+# Runs on http://localhost:3000
 ```
 
-Access at http://localhost:3000
+The Vite dev server proxies `/api/*` → `http://localhost:8000/*` automatically.
 
 ## API Endpoints
 
 ```
-GET  /                     → Health check
-POST /api/upload-pdf       → Upload file & extract text
-POST /api/generate-mcqs    → Generate MCQs
+GET  /               → Health check
+POST /upload-file    → Upload file, extract text, store in Vercel Blob
+POST /generate-mcqs  → Generate MCQs from extracted text
 ```
 
-Full API docs: http://localhost:8000/docs
-
-## Deployment
-
-Vercel: Import project, set GROQ_API_KEY, deploy
+Full interactive docs: `http://localhost:8000/docs`
 
 ## Project Structure
 
 ```
 backend/
-  index.py              # FastAPI app
-  routes.py            # API endpoints
-  handlers.py          # Business logic
-  models.py            # Data models
-  llm/mcq_generator.py # AI generation
-  pdf/extractor.py     # Text extraction
-  utils/blob_storage.py # Cloud storage
+  index.py          # FastAPI app, CORS config
+  routes.py         # API endpoints
+  extractor.py      # PDF/PPTX/TXT text extraction + OCR fallback
+  mcq_generator.py  # Groq API call + response parsing
+  blob_storage.py   # Vercel Blob upload/download
+  requirements.txt
+  nixpacks.toml     # Railway: installs tesseract + poppler at build time
+  railway.toml      # Railway: start command
+  build.sh          # Render: installs system packages + pip deps
+  Procfile          # Render/Heroku: start command
 
 frontend/
   src/
-    App.jsx            # Main component
+    App.jsx
+    pages/
+      HomePage.jsx
+      GeneratorPage.jsx
     components/
-      FileUpload.jsx   # Upload interface
-      MCQResults.jsx   # Results display
+      FileUpload.jsx
+      MCQResults.jsx
+      LoadingAnimation.jsx
+      Navbar.jsx
+      Hero.jsx
+      Features.jsx
+      AnimatedBackground.jsx
+  vite.config.js    # Dev proxy: /api → localhost:8000
 ```
+
+## Deployment
+
+### Railway
+
+The `backend/` folder contains `railway.toml` and `nixpacks.toml`.  
+Set the **Root Directory** to `backend` in Railway settings, then add environment variables:
+
+| Variable | Description |
+|----------|-------------|
+| `GROQ_API_KEY` | Groq API key |
+| `VERCEL_BLOB_READ_WRITE_TOKEN` | Vercel Blob token |
+| `VERCEL_BLOB_STORE_ID` | Vercel Blob store ID |
+| `FRONTEND_URL` | Your frontend URL (for CORS) |
+
+### Render
+
+The repo root contains `render.yaml`. Connect the repo on Render and add the same environment variables above in the dashboard (they are marked `sync: false` so they won't be committed).
+
+### Frontend (Vercel)
+
+Set `VITE_API_URL` to your Railway or Render backend URL in Vercel project settings.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT — see [LICENSE](LICENSE)
 
 ## Author
 
-Vishal Baraiya - B.Tech CSE Student
+Vishal Baraiya — B.Tech CSE  
 GitHub: [@mr-baraiya](https://github.com/mr-baraiya)
