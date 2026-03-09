@@ -1,5 +1,6 @@
 import logging
 import os
+import shutil
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -27,7 +28,13 @@ app.add_middleware(
 @app.on_event("startup")
 async def on_start():
     from blob_storage import validate_blob_credentials
-    
+
+    # Log whether OCR tools are installed
+    tess = shutil.which("tesseract")
+    pdftoppm = shutil.which("pdftoppm")
+    log.info(f"tesseract: {tess}")
+    log.info(f"pdftoppm:  {pdftoppm}")
+
     if validate_blob_credentials():
         log.info("Vercel Blob ready")
     else:
