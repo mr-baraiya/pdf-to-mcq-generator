@@ -36,8 +36,13 @@ Tesseract OCR
 pdf2image
 
 Frontend
-Next.js
+Vite
 React
+TailwindCSS
+Framer Motion
+GSAP
+jsPDF
+React Router DOM
 
 AI
 Groq Llama 3.3 70B
@@ -49,6 +54,18 @@ Deployment
 Vercel (Frontend)
 Railway (Backend)
 Render (Docker Backend)
+
+Key Backend Libraries
+fastapi 0.115
+uvicorn 0.35
+python-pptx 1.0
+PyPDF2 3.0
+pytesseract 0.3
+pdf2image 1.17
+Pillow 11.1
+groq 1.0
+vercel-blob 0.4
+aiohttp 3.13
 
 ---
 
@@ -66,6 +83,7 @@ pdf-to-mcq-generator/
 │   ├── blob_storage.py
 │   ├── build.sh
 │   ├── Dockerfile
+│   ├── render.yaml
 │   ├── requirements.txt
 │   └── .env.example
 │
@@ -86,7 +104,6 @@ pdf-to-mcq-generator/
 │   │
 │   └── vite.config.js
 │
-├── render.yaml
 └── README.md
 ```
 
@@ -115,6 +132,22 @@ macOS
 ```
 brew install tesseract poppler
 ```
+
+Windows
+
+Download and install Tesseract from the official UB-Mannheim build:
+
+```
+https://github.com/UB-Mannheim/tesseract/wiki
+```
+
+Download Poppler for Windows and add it to your PATH:
+
+```
+https://github.com/oschwartz10612/poppler-windows/releases
+```
+
+After installing, add both bin directories to your system PATH environment variable.
 
 ---
 
