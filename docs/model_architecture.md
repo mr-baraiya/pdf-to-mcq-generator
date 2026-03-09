@@ -194,6 +194,83 @@ User uploads PDF / PPTX / TXT
 
 ---
 
-## 12. Summary for Presentation
+## 12. ML/DL Features (For Viva/Presentation)
+
+### Attention Mechanism
+- **Grouped Query Attention (GQA)** — 64 Query heads, 8 Key-Value heads
+- Reduces KV cache memory by 8× while maintaining accuracy
+- Scaled dot-product attention:
+
+$$\text{Attention}(Q,K,V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
+
+### Activation Function
+- **SwiGLU** (Swish-Gated Linear Unit)
+
+$$\text{SwiGLU}(x) = \text{Swish}(xW) \odot (xV), \quad \text{Swish}(x) = x \cdot \sigma(x)$$
+
+- Better gradient flow than ReLU at large scale
+
+### Normalization
+- **RMSNorm** — applied **before** each sub-layer (Pre-Norm)
+
+$$\text{RMSNorm}(x) = \frac{x}{\sqrt{\frac{1}{n}\sum x_i^2}} \cdot \gamma$$
+
+- No mean subtraction, faster and more stable than LayerNorm
+
+### Positional Encoding
+- **RoPE** (Rotary Position Embedding)
+- Encodes relative position directly inside attention computation
+- Generalizes to longer sequences better than learned absolute embeddings
+
+### Optimization (Training)
+- **AdamW optimizer** — Adam + weight decay for regularization
+- **Cosine learning rate schedule** with linear warmup
+- **Gradient clipping** to prevent exploding gradients
+
+### Regularization
+- Weight decay via AdamW
+- Dropout in attention layers during training (disabled at inference)
+- Pre-Norm architecture improves training stability
+
+### Loss Function
+- **Cross-Entropy Loss** (Causal Language Modeling / next-token prediction)
+
+$$\mathcal{L} = -\sum_{t} \log P(x_t \mid x_{<t})$$
+
+### Training Technique
+- **Self-supervised learning** — pre-trained on trillions of tokens, no labeled data needed
+- **SFT** (Supervised Fine-Tuning) on high-quality instruction datasets
+- **RLHF** (Reinforcement Learning from Human Feedback) — fine-tuned for instruction following
+
+### Transfer Learning
+- Pre-trained general knowledge → fine-tuned for instructions
+- This project uses it via **zero-shot prompting** — no further training or fine-tuning needed
+
+### Tokenization
+- **Byte Pair Encoding (BPE)** — vocabulary of 128,256 tokens
+- Handles subwords, rare words, and multiple languages efficiently
+
+---
+
+### Quick-Answer Table (if sir asks directly)
+
+| Question | Answer |
+|----------|--------|
+| Hidden layers? | **80** Transformer blocks |
+| Activation function? | **SwiGLU** |
+| Normalization? | **RMSNorm** (Pre-Norm) |
+| Attention type? | **Grouped Query Attention (GQA)** |
+| Positional encoding? | **RoPE** |
+| Loss function? | **Cross-Entropy** |
+| Optimizer? | **AdamW** |
+| Training method? | **Self-supervised + RLHF** |
+| Parameters? | **70 Billion** |
+| Context window? | **128,000 tokens** |
+| Tokenizer? | **BPE (vocab 128,256)** |
+| Model type? | **Decoder-only Transformer** |
+
+---
+
+## 13. Summary for Presentation
 
 > **"In this project we use Meta's LLaMA 3.3 70B model, a decoder-only transformer with 80 hidden layers, 70 billion parameters, and a 128,000 token context window. Each hidden layer contains a Grouped Query Attention block (64 Q-heads, 8 KV-heads) and a SwiGLU feed-forward network with hidden dimension 28,672. The model is served via the Groq Cloud API, which provides near-instant inference using custom LPU hardware. Text is first extracted from the uploaded document (with OCR fallback for scanned PDFs), then sent to the model with a structured prompt requesting JSON output. The response is parsed and rendered as interactive MCQs on the frontend."**
