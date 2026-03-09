@@ -1,23 +1,16 @@
-FROM python:3.12-slim
-
-# Install system dependencies for OCR
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        tesseract-ocr \
-        tesseract-ocr-eng \
-        poppler-utils \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install Python dependencies
-COPY backend/requirements.txt .
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    tesseract-ocr \
+    poppler-utils \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy backend source
-COPY backend/ .
+COPY . .
 
-EXPOSE 8000
-
-CMD uvicorn index:app --host 0.0.0.0 --port ${PORT:-8000}
+ENV PORT=8000
+CMD ["python", "main.py"]
