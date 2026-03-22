@@ -3,10 +3,7 @@
 Live Demo:
 [https://pdf2mcq-henna.vercel.app/](https://pdf2mcq-henna.vercel.app/)
 
-Backend API (Railway):
-[https://pdf-to-mcq-generator-production.up.railway.app/docs](https://pdf-to-mcq-generator-production.up.railway.app/docs)
-
-Backend API (Render):
+Backend API:
 [https://pdf-to-mcq-generator-fastapi.onrender.com/docs](https://pdf-to-mcq-generator-fastapi.onrender.com/docs)
 
 PDF to MCQ Generator is a web application that automatically generates Multiple Choice Questions from PDF, PowerPoint, and text documents using AI. The system extracts content from uploaded documents, including scanned PDFs through OCR, and uses the Groq Llama 3.3 70B model to generate structured MCQs.
