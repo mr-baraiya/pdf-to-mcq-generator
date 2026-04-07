@@ -18,3 +18,4 @@ sentence-transformers>=3.2.0
 faiss-cpu>=1.9.0
 numpy>=2.1.0
 tenacity==8.2.3
+langchain-huggingface>=0.0.3
