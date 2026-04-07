@@ -84,7 +84,7 @@ def make_prompt(txt, num):
     if len(txt) > 10000:
         txt = txt[:10000] + "...(truncated)"
     
-        return f"""You are an intelligent educational assistant designed to generate high-quality multiple-choice questions (MCQs) from academic content.
+    return f"""You are an intelligent educational assistant designed to generate high-quality multiple-choice questions (MCQs) from academic content.
 
 Your task is to generate MCQs ONLY from the provided context. The context is retrieved from a larger document using a retrieval system, so you must strictly rely on it.
 
