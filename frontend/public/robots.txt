@@ -1,0 +1,6 @@
+# See https://www.robotstxt.org/robotstxt.html for syntax and directives
+
+User-agent: *
+Allow: /
+
+Sitemap: https://pdf2mcq-henna.vercel.app/sitemap.xml
