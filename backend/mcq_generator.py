@@ -2,28 +2,44 @@ import os
 import json
 import re
 import logging
+import gc
 from groq import Groq
-from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from sentence_transformers import SentenceTransformer
 
 log = logging.getLogger(__name__)
 _EMBEDDINGS = None
+_EMBEDDING_MODEL = None
+
+
+class _SentenceTransformerEmbeddings:
+    def __init__(self, model):
+        self._model = model
+
+    def embed_documents(self, texts):
+        return self._model.encode(texts, normalize_embeddings=True).tolist()
+
+    def embed_query(self, text):
+        return self._model.encode([text], normalize_embeddings=True)[0].tolist()
 
 
 def _get_embeddings():
     global _EMBEDDINGS
+    global _EMBEDDING_MODEL
     if _EMBEDDINGS is None:
-        _EMBEDDINGS = HuggingFaceEmbeddings(
-            model_name="sentence-transformers/all-MiniLM-L6-v2"
-        )
+        if _EMBEDDING_MODEL is None:
+            _EMBEDDING_MODEL = SentenceTransformer(
+                "sentence-transformers/paraphrase-MiniLM-L3-v2"
+            )
+        _EMBEDDINGS = _SentenceTransformerEmbeddings(_EMBEDDING_MODEL)
     return _EMBEDDINGS
 
 
 def _build_vector_store(text):
     splitter = RecursiveCharacterTextSplitter(
-        chunk_size=1000,
-        chunk_overlap=150,
+        chunk_size=500,
+        chunk_overlap=50,
         separators=["\n\n", "\n", ". ", " ", ""],
     )
     docs = splitter.create_documents([text])
@@ -39,21 +55,28 @@ def _retrieve_context(text, k=4):
     query = (
         "Key concepts, definitions, explanations, examples, and applications from the document."
     )
-    docs = store.similarity_search(query, k=k)
-    return "\n\n".join(doc.page_content for doc in docs).strip()
+    try:
+        docs = store.similarity_search(query, k=k)
+        return "\n\n".join(doc.page_content for doc in docs).strip()
+    finally:
+        del store
+        gc.collect()
 
 
 def generate_mcqs(txt, num=5):
-    if not txt or not txt.strip():
-        raise ValueError("Text empty")
-    if num < 1 or num > 50:
-        raise ValueError("Questions: 1-50")
+    try:
+        if not txt or not txt.strip():
+            raise ValueError("Text empty")
+        if num < 1 or num > 50:
+            raise ValueError("Questions: 1-50")
 
-    context = _retrieve_context(txt)
-    if not context:
-        return []
+        context = _retrieve_context(txt)
+        if not context:
+            return []
 
-    return generate_with_groq(context, num)
+        return generate_with_groq(context, num)
+    finally:
+        gc.collect()
 
 
 def generate_with_groq(txt, num):
