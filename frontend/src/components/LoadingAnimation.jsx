@@ -88,7 +88,9 @@ const LoadingAnimation = ({ stage = 'uploading' }) => {
             Processing Your PDF
           </h3>
           <p className="text-gray-400">
-            This might take 1-2 minutes. Please wait while we generate your MCQs.
+            {stage === 'generating'
+              ? 'Waking up AI server... generating MCQs '
+              : 'This might take 1-2 minutes. Please wait while we generate your MCQs.'}
           </p>
         </motion.div>
 
