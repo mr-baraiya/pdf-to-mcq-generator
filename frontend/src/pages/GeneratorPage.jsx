@@ -8,6 +8,23 @@ import { AlertCircle } from 'lucide-react';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
+const axiosWithRetry = async (config, retries = 3, delayMs = 4000) => {
+  try {
+    return await axios(config);
+  } catch (err) {
+    const status = err.response?.status;
+    const shouldRetry = status === 503 || err.message?.includes('Network Error');
+
+    if (retries > 0 && shouldRetry) {
+      console.log(`Retrying... (${retries} left)`);
+      await new Promise(resolve => setTimeout(resolve, delayMs));
+      return axiosWithRetry(config, retries - 1, delayMs);
+    }
+
+    throw err;
+  }
+};
+
 function GeneratorPage() {
   const [mcqs, setMcqs] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -26,12 +43,21 @@ function GeneratorPage() {
       formData.append('file', file);
       
       setLoadingStage('extracting');
-      const response = await axios.post(`${API_BASE_URL}/upload-file`, formData, {
+      const response = await axiosWithRetry({
+        method: 'post',
+        url: `${API_BASE_URL}/upload-file`,
+        data: formData,
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       
       setExtractedText(response.data.text);
-      
+
+      await axiosWithRetry({
+        method: 'get',
+        url: `${API_BASE_URL}/ai-status`
+      });
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
       await handleGenerateMCQs(numQuestions, response.data.text);
     } catch (err) {
       let errorMessage = 'Error uploading file: ';
@@ -58,9 +84,13 @@ function GeneratorPage() {
     setError('');
     
     try {
-      const response = await axios.post(`${API_BASE_URL}/generate-mcqs`, {
-        text: text,
-        num_questions: numQs
+      const response = await axiosWithRetry({
+        method: 'post',
+        url: `${API_BASE_URL}/generate-mcqs`,
+        data: {
+          text: text,
+          num_questions: numQs
+        }
       });
       
       const questions = response.data.questions.map(q => ({
